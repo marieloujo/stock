@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Router} from '@angular/router';import {environment} from '../../../environments/environment';
+import {Router} from '@angular/router';
+import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs/index';
 import {CookieService} from 'ngx-cookie-service';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
@@ -56,6 +57,6 @@ export class RequestService {
         this.Cookie.delete('user', '/');
         this.router.navigate(['/login']);
     }
-    
+
 
 }

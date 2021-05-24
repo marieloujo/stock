@@ -47,7 +47,7 @@ export class EtatComponent implements OnInit {
 
     this.listOfColumnHeadeer();
 
-    this.is_admin = this.canWrite();  
+    this.is_admin = this.canWrite();
 
   }
 
@@ -74,6 +74,7 @@ export class EtatComponent implements OnInit {
     }
     this.makeEtatForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
+    this.indexOfTab = 0;
   }
 
   updateForm(data: Etat) {

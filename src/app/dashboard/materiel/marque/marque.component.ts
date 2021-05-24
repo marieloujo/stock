@@ -45,8 +45,8 @@ export class MarqueComponent implements OnInit {
     this.list();
 
     this.listOfColumnHeadeer();
-    
-    this.is_admin = this.canWrite();  
+
+    this.is_admin = this.canWrite();
 
 }
 
@@ -71,6 +71,7 @@ canWrite(): boolean {
     }
     this.makeMarqueForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
+    this.indexOfTab = 0;
   }
 
 

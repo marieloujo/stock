@@ -11,26 +11,27 @@
   <div nz-row [nzGutter]="6">
     <div nz-col [nzSpan]="6">
       <nz-card nzTitle="Aujourd'hui">
-        <p>0 nouvelle demande</p>
+        <p>{{statsCOunt?.day}} nouvelle demande</p>
       </nz-card>
     </div>
     <div nz-col [nzSpan]="6">
       <nz-card nzTitle="Cette semaine">
-        <p>0 nouvelle demande</p>
+        <p>{{statsCOunt?.week}} nouvelle demande</p>
       </nz-card>
     </div>
     <div nz-col [nzSpan]="6">
       <nz-card nzTitle="Ce mois">
-        <p>0 nouvelle demande</p>
+        <p>{{statsCOunt?.month}} nouvelle demande</p>
       </nz-card>
     </div>
     <div nz-col [nzSpan]="6">
       <nz-card nzTitle="Cette année">
-        <p>0 nouvelle demande</p>
+        <p>{{statsCOunt?.year}} nouvelle demande</p>
       </nz-card>
     </div>
   </div>
 </div>
+
 
 
 <nz-divider></nz-divider>

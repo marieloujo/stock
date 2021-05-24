@@ -45,7 +45,7 @@ export class ModeleComponent implements OnInit {
 
     this.listOfColumnHeadeer();
 
-    this.is_admin = this.canWrite();  
+    this.is_admin = this.canWrite();
 
 }
 
@@ -70,6 +70,7 @@ canWrite(): boolean {
     }
     this.makeModeleForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
+    this.indexOfTab = 0;
   }
 
   updateForm(data: Modele){

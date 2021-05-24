@@ -46,7 +46,7 @@ export class GammeComponent implements OnInit {
 
     this.listOfColumnHeadeer();
 
-        this.is_admin = this.canWrite();  
+        this.is_admin = this.canWrite();
         console.log(this.is_admin);
 
     }
@@ -73,6 +73,7 @@ export class GammeComponent implements OnInit {
     }
     this.makeGammeForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
+    this.indexOfTab = 0;
   }
 
   updateForm(data: Gamme){

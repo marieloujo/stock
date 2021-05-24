@@ -102,7 +102,7 @@
     <form [formGroup]="validateProduitForm" nz-form>
       <div nz-row>
 
-        <div nz-col nzSpan="12" style="padding-right: 1.5em">
+        <div nz-col nzSpan="8" style="padding-right: 1.5em">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Num de série</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
@@ -111,11 +111,29 @@
           </nz-form-item>
         </div>
 
-        <div nz-col nzSpan="12" style="padding-right: 1.5em">
+        <div nz-col nzSpan="8" style="padding-right: 1.5em">
           <nz-form-item>
-            <nz-form-label [nzSpan]="24">Gamme</nz-form-label>
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un magasin" formControlName="gamme" >
+            <nz-form-label [nzSpan]="24">Equipement</nz-form-label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un equipement" formControlName="gamme" >
               <nz-option  *ngFor="let gamme of gammeList" [nzLabel]="gamme.libelle" [nzValue]="gamme"></nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="8" style="padding-right: 1.5em">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="24">Marque</nz-form-label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner une marque" formControlName="marque">
+              <nz-option  *ngFor="let marque of marqueList" [nzLabel]="marque.libelle" [nzValue]="marque"></nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="8" style="padding-right: 1.5em">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="24">Modele</nz-form-label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un modele" formControlName="modele" >
+              <nz-option  *ngFor="let modele of modeleList" [nzLabel]="modele.libelle" [nzValue]="modele"></nz-option>
             </nz-select>
           </nz-form-item>
         </div>
@@ -131,22 +149,13 @@
 
         <div nz-col nzSpan="8" style="padding-right: 1.5em">
           <nz-form-item>
-            <nz-form-label [nzSpan]="24">Marque</nz-form-label>
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner une marque" formControlName="marque">
-              <nz-option  *ngFor="let marque of marqueList" [nzLabel]="marque.libelle" [nzValue]="marque"></nz-option>
+            <nz-form-label [nzSpan]="24">Etat</nz-form-label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un etat" formControlName="etat">
+              <nz-option  *ngFor="let etat of etatList" [nzLabel]="etat.libelle" [nzValue]="etat"></nz-option>
             </nz-select>
           </nz-form-item>
         </div>
 
-
-        <div nz-col nzSpan="8" style="padding-right: 1.5em">
-          <nz-form-item>
-            <nz-form-label [nzSpan]="24">Modele</nz-form-label>
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un modele" formControlName="modele" >
-              <nz-option  *ngFor="let modele of modeleList" [nzLabel]="modele.libelle" [nzValue]="modele"></nz-option>
-            </nz-select>
-          </nz-form-item>
-        </div>
 
         <div nz-col nzSpan="24">
           <nz-form-item>
@@ -182,6 +191,7 @@
       </div>
 
     </form>
+
 
   </nz-tab>
 </nz-tabset>

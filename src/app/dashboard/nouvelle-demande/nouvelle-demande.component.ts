@@ -45,7 +45,7 @@ export class NouvelleDemandeComponent implements OnInit {
 
   countNew: number = 0;
 
-  
+
 
   constructor(
     private behaviorService: BehaviorService,
@@ -200,6 +200,10 @@ export class NouvelleDemandeComponent implements OnInit {
         console.log(this.demandeProduitList);
 
         this.makeDemandeForm(null);
+        this.marque = '';
+        this.gamme = '';
+        this.modele = '';
+
       }
     }
     this.countNew++;
@@ -215,53 +219,61 @@ export class NouvelleDemandeComponent implements OnInit {
 
   faireValiderProduit(){
 
-    let demande: Demande = new Demande();
-    let produitList =  this.demandeProduitList;
+    if (this.demandeProduitList != null && this.demandeProduitList.length > 0) {
+
+      let demande: Demande = new Demande();
+      console.log('la liste de demande => ');
+      console.log(this.personneDemande);
+      console.log(this.mouvementDemande);
 
 
-    demande.mouvement = this.mouvementDemande;
-    demande.dateHeure = new Date();
-    demande.personne = this.personneDemande;
-    demande.valider = false;
+      demande.mouvement = this.mouvementDemande;
+      demande.dateHeure = new Date();
+      demande.personne = this.personneDemande;
+      demande.valider = false;
 
-    let newDemande: Demande = new Demande();
+      let newDemande: Demande = new Demande();
 
-    this.demandeService.createDemande(demande).subscribe(
-      (data: any) => {
-      console.log('Enregistrement demande => '+JSON.stringify(data));
-      newDemande = data;
+      this.demandeService.createDemande(demande).subscribe(
+        (data: any) => {
+          console.log('Enregistrement demande => ' + data);
+          newDemande = data;
 
-      let theDemandeProduit: DemandeProduit = new DemandeProduit();
+          let theDemandeProduit: DemandeProduit = new DemandeProduit();
 
+          for (let dp of this.demandeProduitList) {
+            theDemandeProduit.description = dp.description;
+            theDemandeProduit.livrer = dp.livrer;
+            theDemandeProduit.valider = dp.valider;
+            theDemandeProduit.produit = dp.produit;
+            theDemandeProduit.demande = data;
 
-      for (let dp of produitList){
-        theDemandeProduit.description = dp.description;
-        theDemandeProduit.livrer = dp.livrer;
-        theDemandeProduit.valider = dp.valider;
-        theDemandeProduit.produit = dp.produit;
-        theDemandeProduit.demande = data;
+            console.log(theDemandeProduit);
 
-        this.demandeProduitService.createDemandeProduit(theDemandeProduit).subscribe(
-          (data1: any) => {
-            console.log("Enregistrement demandeProduit => "+JSON.stringify(data1));
-          },
-          (error: HttpErrorResponse) => {
-            console.log("Enregistrement demandeProduit non effectuer => "+ error.message);
+            this.demandeProduitService.createDemandeProduit(theDemandeProduit).subscribe(
+              (data1: any) => {
+                console.log('Enregistrement demandeProduit => ' + data1);
+              },
+              (error: HttpErrorResponse) => {
+                console.log('Enregistrement demandeProduit non effectuer => ' + error.message);
+              }
+            );
+
           }
-        );
 
-      }
+          this.countNew = 0;
+          this.demandeProduitList = [];
+          this.router.navigate(['/dashboard']).then(() => {
+            window.location.reload();
+          });
 
-    },
-    (error: HttpErrorResponse) => {
-      console.log('Enregistrement demande non effectué .. error => '+error.message);
+        },
+        (error: HttpErrorResponse) => {
+          console.log('Enregistrement demande non effectué .. error => ' + error.message);
+        }
+      );
+
     }
-    );
-
-    this.demandeProduitList = [];
-    this.router.navigate(['/dashboard']).then(() => {
-        window.location.reload();
-    });
 
   }
 

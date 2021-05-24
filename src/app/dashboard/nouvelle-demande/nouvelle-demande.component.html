@@ -27,6 +27,25 @@
 
       <div nz-row>
 
+        <div nz-col nzSpan="12" style="padding-right: 1.5em">
+          <nz-form-item>
+            <!--<nz-form-label [nzSpan]="24">Demandeur</nz-form-label>-->
+            <nz-form-label [nzSpan]="24">Personne concerné</nz-form-label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner une personne"  formControlName="personne" >
+              <nz-option *ngFor="let pers of personneList" [nzLabel]=" pers.nom + ' ' + pers.prenom + ' --- '+pers.serviceB.libelle " [nzValue]="pers"></nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="12" style="padding-right: 1.5em">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="24">Nature du mouvement</nz-form-label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un mouvement" formControlName="mouvement">
+              <nz-option *ngFor="let mouv of mouvementList" [nzLabel]="mouv.description" [nzValue]="mouv.value"></nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+
         <div nz-col nzSpan="10" style="padding-right: 1.5em">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Num de série</nz-form-label>
@@ -52,7 +71,7 @@
 
         <div nz-col nzSpan="12" style="padding-right: 1.5em">
           <nz-form-item>
-            <nz-form-label [nzSpan]="24">Gamme</nz-form-label>
+            <nz-form-label [nzSpan]="24">Equipement</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
               <input nz-input placeholder="" disabled value="{{gamme}}"/>
             </nz-form-control>
@@ -68,23 +87,7 @@
           </nz-form-item>
         </div>
 
-        <div nz-col nzSpan="12" style="padding-right: 1.5em">
-          <nz-form-item>
-            <nz-form-label [nzSpan]="24">Demandeur</nz-form-label>
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner une personne"  formControlName="personne" >
-              <nz-option *ngFor="let pers of personneList" [nzLabel]=" pers.nom + ' ' + pers.prenom + ' --- '+pers.serviceB.libelle " [nzValue]="pers"></nz-option>
-            </nz-select>
-          </nz-form-item>
-        </div>
 
-        <div nz-col nzSpan="12" style="padding-right: 1.5em">
-          <nz-form-item>
-            <nz-form-label [nzSpan]="24">Nature du mouvement</nz-form-label>
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un mouvement" formControlName="mouvement">
-              <nz-option *ngFor="let mouv of mouvementList" [nzLabel]="mouv.description" [nzValue]="mouv.value"></nz-option>
-            </nz-select>
-          </nz-form-item>
-        </div>
 
         <div nz-col nzSpan="24">
           <nz-form-item>
@@ -117,6 +120,7 @@
             </nz-space-item>
           </nz-space>
         </div>
+
 
       </div>
 

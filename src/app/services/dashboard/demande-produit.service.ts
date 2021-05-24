@@ -38,5 +38,9 @@ export class DemandeProduitService {
 
   }
 
+  getDemandeProduitCreatedBy(id: number): Observable<Object> {
+    return this.http.get(`${this.url}/demande-produit-createdBy/${id}`, this.requestService.http_get_request());
+  }
+
 
 }
