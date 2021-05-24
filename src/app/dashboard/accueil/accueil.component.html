@@ -11,22 +11,22 @@
   <div nz-row [nzGutter]="6">
     <div nz-col [nzSpan]="6">
       <nz-card nzTitle="Aujourd'hui">
-        <p>{{statsCOunt?.day}} nouvelle demande</p>
+        <p>0 nouvelle demande</p>
       </nz-card>
     </div>
     <div nz-col [nzSpan]="6">
       <nz-card nzTitle="Cette semaine">
-        <p>{{statsCOunt?.week}} nouvelle demande</p>
+        <p>0 nouvelle demande</p>
       </nz-card>
     </div>
     <div nz-col [nzSpan]="6">
       <nz-card nzTitle="Ce mois">
-        <p>{{statsCOunt?.month}} nouvelle demande</p>
+        <p>0 nouvelle demande</p>
       </nz-card>
     </div>
     <div nz-col [nzSpan]="6">
       <nz-card nzTitle="Cette année">
-        <p>{{statsCOunt?.year}} nouvelle demande</p>
+        <p>0 nouvelle demande</p>
       </nz-card>
     </div>
   </div>
@@ -49,7 +49,7 @@
 
         </th>
 
-        <th> Actions</th>
+        <th *ngIf="validateur || livreur"> Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -62,12 +62,12 @@
         <td>{{ data.personne?.nom + ' ' + data.personne?.prenom }}</td>
 
         <td>
-          <button [disabled]="data.valider" (click)="validerDemande(data)" nz-button nzType="primary" style="margin-right: 2px;"> Valider
+          <button *ngIf="validateur" [disabled]="data.valider" (click)="validerDemande(data)" nz-button nzType="primary" style="margin-right: 2px;"> Valider
           </button>
 
-          <button [disabled]="data.livrer || data.valider == false" (click)="livrerDemande(data)" nz-button  nzType="primary"> Livrer
+          <button  *ngIf="livreur && data.valider" [disabled]="data.livrer" (click)="livrerDemande(data)" nz-button  nzType="primary"> Livrer
           </button>
-
+          <span *ngIf="livreur && !data.valider"> En attente de validation </span>
         </td>
       </tr>
       </tbody>

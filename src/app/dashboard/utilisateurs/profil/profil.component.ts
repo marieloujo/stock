@@ -71,7 +71,6 @@ export class ProfilComponent implements OnInit {
     }
     this.makeProfilForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
-    this.indexOfTab = 0;
   }
 
   updateForm(data: Profil){

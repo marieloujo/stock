@@ -2,33 +2,51 @@
 
 <div nz-row>
 
-  <button nz-button nzBlock nzType="primary" style="margin-bottom: 10px">
+  <button nz-button nzBlock nzType="primary" style="margin-bottom: 10px" *ngIf="can_create">
     <a [routerLink]="['/dashboard/nouvelle-demande']"> Faire une nouvelle demande </a>
   </button>
 
   <nz-table #sortTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzPageSize]="5">
     <thead>
     <tr>
-      <th *ngFor="let column of listOfColumn" [nzSortFn]="column.sortFn">
+      <th nzCustomFilter *ngFor="let column of listOfColumn" [nzSortFn]="column.sortFn">
         {{ column.title }}
 
+        <nz-filter-trigger *ngIf="column.title == 'Numero Série'" [(nzVisible)]="visibleNumero" [nzActive]="searchValueNumero.length > 0" [nzDropdownMenu]="menuNumero">
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger>
+
+        <nz-filter-trigger *ngIf="column.title == 'Equipement'"  [(nzVisible)]="visibleEquipement" [nzActive]="searchValueEquipement.length > 0" [nzDropdownMenu]="menuEquipement">
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger>
+
+        <nz-filter-trigger *ngIf="column.title == 'Marque'" [(nzVisible)]="visibleMarque" [nzActive]="searchValueMarque.length > 0" [nzDropdownMenu]="menuMarque">
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger>
+
+        <nz-filter-trigger *ngIf="column.title == 'Modele'" [(nzVisible)]="visibleModele" [nzActive]="searchValueModele.length > 0" [nzDropdownMenu]="menuModele">
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger>
+
+        <nz-filter-trigger *ngIf="column.title == 'Demandeur'" [(nzVisible)]="visibleDemandeur" [nzActive]="searchValueDemandeur.length > 0" [nzDropdownMenu]="menuDemandeur">
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger>
 
       </th>
-
       <th> Détails</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let data of sortTable.data">
 
-      <td>{{ data.produit.numSerie}}</td>
+      <td>{{ data.produit.numSerie }}</td>
       <td>{{ data.gamme?.libelle }}</td>
       <td>{{ data.marque?.libelle }}</td>
       <td>{{ data.modele?.libelle }}</td>
-      <td>{{ data.personne?.nom + ' ' + data.personne?.prenom   + ' -- ' + data.personne?.serviceB.libelle}}</td>
+      <td>{{ data.personne?.nom + ' ' + data.personne?.prenom }}</td>
 
       <td>
-        <button (click)="openDrawer(data)" nz-button nzShape="circle" nzType="primary"><i nz-icon nzTheme="outline"
+        <button (click)="openDrawer()" nz-button nzShape="circle" nzType="primary"><i nz-icon nzTheme="outline"
                                                                                            nzType="bars"></i>
         </button>
 
@@ -39,17 +57,78 @@
 </div>
 
 
+<nz-dropdown-menu #menuNumero="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="chercher par numéro de série" [(ngModel)]="searchValueNumero" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchNumero()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetNumero()">Annuler</button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuEquipement="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="chercher par equipement" [(ngModel)]="searchValueEquipement" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchEquipement()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetEquipement()">Annuler</button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuMarque="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="chercher par marque" [(ngModel)]="searchValueMarque" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchMarque()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetMarque()">Annuler</button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuModele="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="chercher par modele" [(ngModel)]="searchValueModele" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchModele()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetModele()">Annuler</button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuDemandeur="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="chercher par demandeur" [(ngModel)]="searchValueDemandeur" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchDemandeur()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetDemandeur()">Annuler</button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+
 <nz-drawer [nzVisible]="visibleDrawer" [nzWidth]="640" [nzClosable]="false" (nzOnClose)="closeDrawer()">
   <ng-container *nzDrawerContent>
     <h2 class="title" style=" margin-bottom: 24px;"> DÉTAILS COMPLÉMENTAIRE </h2>
 
     <nz-descriptions [nzColumn]="2" nzTitle="Demandeur">
-      <nz-descriptions-item nzTitle=" " [nzSpan]="2">{{demandeurCourant}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle=" " [nzSpan]="2">Mamane ADJAME.</nz-descriptions-item>
     </nz-descriptions>
     <nz-divider></nz-divider>
 
     <nz-descriptions [nzColumn]="2" nzTitle="Date demande">
-      <nz-descriptions-item nzTitle=" " [nzSpan]="2">{{ dateToShow + ' à ' + timeToShow}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle=" " [nzSpan]="2">04 mai 2021.</nz-descriptions-item>
     </nz-descriptions>
     <nz-divider></nz-divider>
 
@@ -73,12 +152,7 @@
     </nz-descriptions>
     <nz-divider></nz-divider>
 
-    <nz-descriptions [nzColumn]="2" nzTitle="Description">
-      <nz-descriptions-item nzTitle=" " [nzSpan]="2">{{descriptionCourante}}.</nz-descriptions-item>
-    </nz-descriptions>
-    <nz-divider></nz-divider>
-
-    <!--<nz-descriptions [nzColumn]="2" nzTitle="Destination">
+    <nz-descriptions [nzColumn]="2" nzTitle="Destination">
       <nz-descriptions-item nzTitle=" " [nzSpan]="2">Comptabilité.</nz-descriptions-item>
     </nz-descriptions>
     <nz-divider></nz-divider>
@@ -86,7 +160,7 @@
     <nz-descriptions [nzColumn]="2" nzTitle="Date mise en service">
       <nz-descriptions-item nzTitle=" " [nzSpan]="2">18 mai 2021.</nz-descriptions-item>
     </nz-descriptions>
-    <nz-divider></nz-divider>-->
+    <nz-divider></nz-divider>
 
   </ng-container>
 </nz-drawer>

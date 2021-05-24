@@ -5,14 +5,14 @@
       <thead>
       <tr>
         <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" >{{ column.title }}</th>
-        <!--<th> Actions </th>-->
+        <th *ngIf="is_admin"> Actions </th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let data of sortTable.data">
         <td>{{ data?.code }}</td>
         <td>{{ data?.libelle }}</td>
-        <!--<td>
+        <td *ngIf="is_admin">
           <nz-space>
             <nz-space-item>
               <button (click)="updateForm(data)" nz-button nzType="primary" nzShape="circle"><i nz-icon nzType="edit" nzTheme="outline"></i></button>
@@ -27,12 +27,12 @@
                 nz-button nzType="primary" nzShape="circle"><i nz-icon nzType="delete" nzTheme="outline"></i></button>
             </nz-space-item>
           </nz-space>
-        </td>-->
+        </td>
       </tr>
       </tbody>
     </nz-table>
   </nz-tab>
-  <!--<nz-tab [nzTitle]="'Nouvelle état' ">
+  <nz-tab [nzTitle]="'Nouvelle état' " *ngIf="is_admin">
 
     <form [formGroup]="validateEtatForm" nz-form>
       <div nz-row>
@@ -77,5 +77,5 @@
 
     </form>
 
-  </nz-tab>-->
+  </nz-tab>
 </nz-tabset>

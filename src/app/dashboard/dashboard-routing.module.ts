@@ -6,10 +6,12 @@ import {MagasinComponent} from './magasin/magasin.component';
 import {NouvelleDemandeComponent} from './nouvelle-demande/nouvelle-demande.component';
 import {AproposComponent} from './apropos/apropos.component';
 import {HistoriqueDemandeComponent} from './historique-demande/historique-demande.component';
+import { AuthGuard } from '../auth.guard';
+
 
 const routes: Routes = [
   {
-    path: '', component: DashboardComponent,
+    path: '', component: DashboardComponent, canActivate: [ AuthGuard ],
     children: [
       {
         path: '',

@@ -6,6 +6,9 @@ import {MagasinService} from '../../../services/dashboard/magasin.service';
 import {GammeService} from '../../../services/dashboard/gamme.service';
 import {Gamme} from '../../../models/gamme';
 import {HttpErrorResponse} from '@angular/common/http';
+import { TokenService } from 'src/app/services/token/token.service';
+import { Token } from 'src/app/models/token.model';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-gamme',
@@ -24,11 +27,15 @@ export class GammeComponent implements OnInit {
 
   textValue: string | null = null;
 
+  is_admin: boolean;
+  token: Token;
+
   constructor(
     private behaviorService: BehaviorService,
     private fb: FormBuilder,
-    private gammeService: GammeService
-  ) { }
+    private gammeService: GammeService,
+    private tokenService: TokenService
+  ) { this.token = this.tokenService.getAccessToken(); }
 
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Matériel', 'Equipement']);
@@ -39,7 +46,14 @@ export class GammeComponent implements OnInit {
 
     this.listOfColumnHeadeer();
 
-  }
+        this.is_admin = this.canWrite();  
+        console.log(this.is_admin);
+
+    }
+
+    canWrite(): boolean {
+    return this.token.roles.indexOf(environment.ROLE_ADMIN) > -1;
+    }
 
   makeGammeForm(gamme: Gamme){
     this.validateMagasinForm = this.fb.group({
@@ -59,7 +73,6 @@ export class GammeComponent implements OnInit {
     }
     this.makeGammeForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
-    this.indexOfTab = 0;
   }
 
   updateForm(data: Gamme){

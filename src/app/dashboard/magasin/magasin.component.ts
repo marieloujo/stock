@@ -5,6 +5,9 @@ import {Magasin} from '../../models/magasin';
 import {HttpErrorResponse} from '@angular/common/http';
 import {MagasinService} from '../../services/dashboard/magasin.service';
 import {Produit} from '../../models/produit';
+import { TokenService } from 'src/app/services/token/token.service';
+import { Token } from 'src/app/models/token.model';
+import {environment} from '../../../environments/environment';
 //import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
@@ -16,11 +19,8 @@ export class MagasinComponent implements OnInit {
 
 
   validateMagasinForm!: FormGroup;
-
   magasinList: Magasin[];
-
   indexOfTab: number;
-
   listOfColumn: any = [];
 
   searchValue = '';
@@ -28,12 +28,19 @@ export class MagasinComponent implements OnInit {
   listOfDisplayData;
   pageIndex;
 
+  is_admin: boolean;
+
+  token: Token;
+
   constructor(
     private behaviorService: BehaviorService,
     private fb: FormBuilder,
     private magasinService: MagasinService,
+    private tokenService: TokenService
     //private nzMessageService: NzMessageService
-  ) { }
+  ) { 
+      this.token = tokenService.getAccessToken();
+  }
 
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Magasins']);
@@ -44,7 +51,15 @@ export class MagasinComponent implements OnInit {
 
     this.listOfColumnHeadeer();
 
+    this.is_admin = this.canWrite();    
+
   }
+
+
+  canWrite(): boolean {
+    return this.token.roles.indexOf(environment.ROLE_ADMIN) > -1;
+  }
+
 
   makeMagasinForm(magasin: Magasin){
     this.validateMagasinForm = this.fb.group({

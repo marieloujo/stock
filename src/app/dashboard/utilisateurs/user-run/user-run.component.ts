@@ -11,6 +11,7 @@ import {ServiceBService} from '../../../services/dashboard/service-b.service';
 import {Produit} from '../../../models/produit';
 import {Profil} from '../../../models/profil';
 import {ServiceB} from '../../../models/service-b';
+import { Role } from 'src/app/models/role';
 
 @Component({
   selector: 'app-user-run',
@@ -22,7 +23,7 @@ export class UserRunComponent implements OnInit {
   validatePersonneForm!: FormGroup;
 
   personneList: Personne[];
-  profilList: Profil[];
+  profilList: Role[];
   serviceBList: ServiceB[];
 
   indexOfTab: number;
@@ -71,7 +72,7 @@ export class UserRunComponent implements OnInit {
 
   listProfil(): void {
     this.profilService.getList().subscribe(
-      (data: Profil[]) => {
+      (data: Role[]) => {
         this.profilList = data;
         console.log('Profil List ==>', this.profilList);
       },
@@ -102,10 +103,12 @@ export class UserRunComponent implements OnInit {
         [Validators.required]],
       email: [personne != null ? personne.email : null,
         [Validators.required]],
-      profil: [personne != null ? personne.profil : null,
+      roles: [personne != null ? personne.roles[0] : null,
         [Validators.required]],
       serviceB: [personne != null ? personne.serviceB : null,
         [Validators.required]],
+        username: [personne != null ? personne.username : null],
+        password: [personne != null ? personne.password : null],
     });
   }
 
@@ -130,6 +133,13 @@ export class UserRunComponent implements OnInit {
     if (this.validatePersonneForm.valid) {
 
       const formData = this.validatePersonneForm.value;
+
+      let role = new Role();
+      role = formData.roles;
+
+      formData.roles = [];
+      formData.roles.push(role);
+
       if (formData.id == null) {
         this.personneService.createPersonne(formData).subscribe(
           (data: any) => {
@@ -188,6 +198,7 @@ export class UserRunComponent implements OnInit {
         console.log('error getList personne ==>', error.message, ' ', error.status, ' ', error.statusText);
       });
   }
+
 
   resetNom(): void {
     this.searchValueNom = '';

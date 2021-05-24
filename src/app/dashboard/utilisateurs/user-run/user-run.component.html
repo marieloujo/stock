@@ -41,7 +41,7 @@
         <td>{{ data?.prenom }}</td>
         <td>{{ data?.email }}</td>
         <td>{{ data?.sexe }}</td>
-        <td>{{ data?.profil.libelle }}</td>
+        <td>{{ data?.roles[0].name }}</td>
         <td>{{ data?.serviceB.libelle }}</td>
         <td>
           <nz-space>
@@ -171,8 +171,8 @@
         <div nz-col nzSpan="12" style="padding-right: 1.5em">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Profil</nz-form-label>
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un groupe de profil" formControlName="profil" >
-              <nz-option  *ngFor="let profil of profilList" [nzLabel]="profil.libelle" [nzValue]="profil"></nz-option>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectionner un groupe de profil" formControlName="roles" >
+              <nz-option  *ngFor="let profil of profilList" [nzLabel]="profil.name" [nzValue]="profil"></nz-option>
             </nz-select>
           </nz-form-item>
         </div>
@@ -190,8 +190,8 @@
         <div nz-col nzSpan="12" style="padding-right: 1.5em">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">E-mail</nz-form-label>
-            <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input formControlName="email" nz-input placeholder="saisir le mail"/>
+            <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner un email valid!">
+              <input formControlName="email" nz-input placeholder="saisir le mail" [email]="true"/>
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -200,7 +200,7 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Login</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input  nz-input placeholder="saisir le login"/>
+              <input formControlName="username" nz-input placeholder="saisir le login"/>
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -209,7 +209,7 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Mot de passe </nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input nz-input placeholder="saisir le mot de passe"/>
+              <input nz-input formControlName="password" placeholder="saisir le mot de passe"/>
             </nz-form-control>
           </nz-form-item>
         </div>
