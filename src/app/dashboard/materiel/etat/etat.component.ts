@@ -59,6 +59,7 @@ export class EtatComponent implements OnInit {
     }
     this.makeEtatForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
+    this.indexOfTab = 0;
   }
 
   updateForm(data: Etat) {

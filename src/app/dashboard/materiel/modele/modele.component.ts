@@ -56,6 +56,7 @@ export class ModeleComponent implements OnInit {
     }
     this.makeModeleForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
+    this.indexOfTab = 0;
   }
 
   updateForm(data: Modele){

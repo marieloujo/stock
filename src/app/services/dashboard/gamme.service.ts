@@ -32,4 +32,8 @@ export class GammeService {
     return this.http.delete(`${this.url}/supprimer-gamme/${id}`);
   }
 
+  getGammeById(id: number): Observable<Object> {
+    return this.http.delete(`${this.url}/get-by-id/${id}`);
+  }
+
 }

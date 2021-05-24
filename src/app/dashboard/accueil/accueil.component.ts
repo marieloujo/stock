@@ -9,6 +9,15 @@ import {DemandeService} from '../../services/dashboard/demande.service';
 import {Produit} from '../../models/produit';
 import {Demande} from '../../models/demande';
 import {Magasin} from '../../models/magasin';
+import {Gamme} from '../../models/gamme';
+import {GammeService} from '../../services/dashboard/gamme.service';
+
+interface StatsPer_dayWeekMonthYear {
+  day: number;
+  week: number;
+  month: number;
+  year: number;
+}
 
 @Component({
   selector: 'app-accueil',
@@ -22,11 +31,19 @@ export class AccueilComponent implements OnInit {
   listOfColumn: any = [];
   listOfDisplayData;
 
+  statsCOunt: StatsPer_dayWeekMonthYear = new class implements StatsPer_dayWeekMonthYear {
+    day: number;
+    month: number;
+    week: number;
+    year: number;
+  };
+
   constructor(
     private behaviorService: BehaviorService,
     private demandeProduitService: DemandeProduitService,
     private produitService: ProduitService,
     private demandeService: DemandeService,
+    private gammeService: GammeService,
   ) { }
 
   ngOnInit(): void {
@@ -35,6 +52,23 @@ export class AccueilComponent implements OnInit {
     this.listDemandeProduitDescCreatedDate();
 
     this.listOfColumnHeader();
+
+    this.getStatsOfDemande();
+
+  }
+
+  getStatsOfDemande(){
+
+    this.demandeService.getStatsDayWeekMonthYear().subscribe(
+      (data: any) => {
+        console.log('Les stats ! => ');
+        console.log(data);
+        this.statsCOunt.day = data[0];
+        this.statsCOunt.week = data[1];
+        this.statsCOunt.month = data[2];
+        this.statsCOunt.year = data[3];
+      }
+    )
 
   }
 
@@ -64,6 +98,35 @@ export class AccueilComponent implements OnInit {
         console.log('Demande Produit update ==>', data);
 
         this.listDemandeProduitDescCreatedDate();
+
+
+        //Modification de la gamme (equipement) concerné
+        //let gm: Gamme[] = this.gammeList.filter(g => g.id == newProduit.gamme.id);
+        let gm: Gamme = new Gamme();
+        this.gammeService.getGammeById(demandeProduit.gamme.id).subscribe(
+          (data: Gamme) => {
+
+            gm = data;
+            gm.nbrStock -= 1;
+
+            this.gammeService.updateGamme(gm).subscribe(
+              (data: Gamme) => {
+                console.log('Update ok');
+                console.log(data);
+              },
+              (error: HttpErrorResponse) => {
+                console.log('Update non ok');
+              });
+
+            console.log('Recherche By Id de Gamme ok');
+
+
+          },
+          (error: HttpErrorResponse) => {
+            console.log('Recherche By Id de Gamme non ok');
+          });
+
+
 
       },
       (error: HttpErrorResponse) => {

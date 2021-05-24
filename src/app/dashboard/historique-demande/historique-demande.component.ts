@@ -105,6 +105,12 @@ export class HistoriqueDemandeComponent implements OnInit {
 
   visibleDrawer = false;
 
+  descriptionCourante: string ='';
+  demandeurCourant: string = '';
+  dateDemandeCourant: string = '';
+  //dateDemandeCourantFormat: Date = new Date();
+  dateDemandeCourantFormat: Date;
+
   constructor(
     private behaviorService: BehaviorService,
     private demandeProduitService: DemandeProduitService,
@@ -180,7 +186,7 @@ export class HistoriqueDemandeComponent implements OnInit {
       {
         title: 'Numero Série',
         compare: null,
-        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.numSerie.localeCompare(b.produit.numSerie),
+        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.numSerie.toLowerCase().localeCompare(b.produit.numSerie.toLowerCase()),
         //sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.numSerie - b.produit.numSerie,
       },
       {
@@ -199,7 +205,7 @@ export class HistoriqueDemandeComponent implements OnInit {
         sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.modele.libelle.localeCompare(b.produit.modele.libelle),
       },
       {
-        title: 'Demandeur',
+        title: 'Personne concernée',
         compare: null,
         sortFn: (a: DemandeProduit, b: DemandeProduit) => a.demande.personne.nom.localeCompare(b.demande.personne.nom),
       },
@@ -216,7 +222,35 @@ export class HistoriqueDemandeComponent implements OnInit {
     ];
   }
 
-  openDrawer(): void {
+  dateToShow: string ='';
+  timeToShow: string ='';
+
+  openDrawer(data: DemandeProduit): void {
+    this.descriptionCourante = data.description;
+
+    this.demandeProduitService.getDemandeProduitCreatedBy(data.id).subscribe(
+      (dataDmdProd: string[]) => {
+
+        console.log('string de demandeur');
+        console.log(dataDmdProd);
+        this.demandeurCourant = dataDmdProd[0];
+        this.dateDemandeCourant = dataDmdProd[1];
+
+        this.dateDemandeCourantFormat = new Date(this.dateDemandeCourant);
+        //this.dateDemandeCourantFormat.toUTCString();
+
+        this.dateToShow = this.dateDemandeCourantFormat.toLocaleDateString();
+        this.timeToShow = this.dateDemandeCourantFormat.toLocaleTimeString();
+
+        console.log('dateDemandeCourant ' +this.dateDemandeCourantFormat);
+        console.log('dateDemandeCourant '+this.dateDemandeCourant);
+
+      },
+      (error: HttpErrorResponse) => {
+        console.log('error get string createdBy createdDate by id demande produit ==>', error.message, ' ', error.status, ' ', error.statusText);
+      });
+
+
     this.visibleDrawer = true;
   }
 

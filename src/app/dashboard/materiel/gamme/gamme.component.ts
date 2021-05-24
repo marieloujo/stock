@@ -59,6 +59,7 @@ export class GammeComponent implements OnInit {
     }
     this.makeGammeForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
+    this.indexOfTab = 0;
   }
 
   updateForm(data: Gamme){

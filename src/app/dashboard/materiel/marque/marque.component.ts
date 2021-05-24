@@ -56,6 +56,7 @@ export class MarqueComponent implements OnInit {
     }
     this.makeMarqueForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
+    this.indexOfTab = 0;
   }
 
 

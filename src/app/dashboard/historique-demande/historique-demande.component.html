@@ -21,14 +21,14 @@
     <tbody>
     <tr *ngFor="let data of sortTable.data">
 
-      <td>{{ data.produit.numSerie }}</td>
+      <td>{{ data.produit.numSerie}}</td>
       <td>{{ data.gamme?.libelle }}</td>
       <td>{{ data.marque?.libelle }}</td>
       <td>{{ data.modele?.libelle }}</td>
-      <td>{{ data.personne?.nom + ' ' + data.personne?.prenom }}</td>
+      <td>{{ data.personne?.nom + ' ' + data.personne?.prenom   + ' -- ' + data.personne?.serviceB.libelle}}</td>
 
       <td>
-        <button (click)="openDrawer()" nz-button nzShape="circle" nzType="primary"><i nz-icon nzTheme="outline"
+        <button (click)="openDrawer(data)" nz-button nzShape="circle" nzType="primary"><i nz-icon nzTheme="outline"
                                                                                            nzType="bars"></i>
         </button>
 
@@ -44,12 +44,12 @@
     <h2 class="title" style=" margin-bottom: 24px;"> DÉTAILS COMPLÉMENTAIRE </h2>
 
     <nz-descriptions [nzColumn]="2" nzTitle="Demandeur">
-      <nz-descriptions-item nzTitle=" " [nzSpan]="2">Mamane ADJAME.</nz-descriptions-item>
+      <nz-descriptions-item nzTitle=" " [nzSpan]="2">{{demandeurCourant}}</nz-descriptions-item>
     </nz-descriptions>
     <nz-divider></nz-divider>
 
     <nz-descriptions [nzColumn]="2" nzTitle="Date demande">
-      <nz-descriptions-item nzTitle=" " [nzSpan]="2">04 mai 2021.</nz-descriptions-item>
+      <nz-descriptions-item nzTitle=" " [nzSpan]="2">{{ dateToShow + ' à ' + timeToShow}}</nz-descriptions-item>
     </nz-descriptions>
     <nz-divider></nz-divider>
 
@@ -73,7 +73,12 @@
     </nz-descriptions>
     <nz-divider></nz-divider>
 
-    <nz-descriptions [nzColumn]="2" nzTitle="Destination">
+    <nz-descriptions [nzColumn]="2" nzTitle="Description">
+      <nz-descriptions-item nzTitle=" " [nzSpan]="2">{{descriptionCourante}}.</nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+
+    <!--<nz-descriptions [nzColumn]="2" nzTitle="Destination">
       <nz-descriptions-item nzTitle=" " [nzSpan]="2">Comptabilité.</nz-descriptions-item>
     </nz-descriptions>
     <nz-divider></nz-divider>
@@ -81,7 +86,7 @@
     <nz-descriptions [nzColumn]="2" nzTitle="Date mise en service">
       <nz-descriptions-item nzTitle=" " [nzSpan]="2">18 mai 2021.</nz-descriptions-item>
     </nz-descriptions>
-    <nz-divider></nz-divider>
+    <nz-divider></nz-divider>-->
 
   </ng-container>
 </nz-drawer>
