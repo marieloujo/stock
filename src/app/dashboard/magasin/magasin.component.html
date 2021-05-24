@@ -10,13 +10,13 @@
             <i nz-icon nzType="search"></i>
           </nz-filter-trigger>
         </th>
-        <th> Actions </th>
+        <th *ngIf="is_admin"> Actions </th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let data of sortTable.data">
         <td>{{ data.libelle }}</td>
-        <td>
+        <td *ngIf="is_admin">
           <nz-space>
             <nz-space-item>
               <button (click)="updateForm(data)" nz-button nzType="primary" nzShape="circle"><i nz-icon nzType="edit" nzTheme="outline"></i></button>
@@ -50,7 +50,7 @@
   </nz-dropdown-menu>
 
 
-  <nz-tab [nzTitle]="'Nouveau magasin' ">
+  <nz-tab [nzTitle]="'Nouveau magasin' " *ngIf="is_admin">
 
     <form [formGroup]="validateMagasinForm" nz-form>
       <div nz-row>
@@ -60,7 +60,7 @@
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
               <input formControlName="libelle" nz-input placeholder="saisir le nom du magasin"/>
             </nz-form-control>
-          </nz-form-item>
+          </nz-form-item> 
         </div>
 
         <div nz-col nzSpan="24">

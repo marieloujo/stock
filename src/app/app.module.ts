@@ -17,6 +17,7 @@ registerLocaleData(fr);
 import { IconDefinition } from '@ant-design/icons-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import * as AllIcons from '@ant-design/icons-angular/icons';
+import { ErrorComponent } from './error/error/error.component';
 
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -25,7 +26,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

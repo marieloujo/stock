@@ -4,10 +4,12 @@ import {DemandeProduitService} from '../../services/dashboard/demande-produit.se
 import {ProduitService} from '../../services/dashboard/produit.service';
 import {DemandeProduit} from '../../models/demande-produit';
 import {Produit} from '../../models/produit';
-import {Magasin} from '../../models/magasin';
 import {HttpErrorResponse} from '@angular/common/http';
 import {DemandeService} from '../../services/dashboard/demande.service';
 import {Demande} from '../../models/demande';
+import { TokenService } from 'src/app/services/token/token.service';
+import { Token } from 'src/app/models/token.model';
+import {environment} from '../../../environments/environment';
 
 interface Historique {
   numserie: string;
@@ -105,19 +107,29 @@ export class HistoriqueDemandeComponent implements OnInit {
 
   visibleDrawer = false;
 
-  descriptionCourante: string ='';
-  demandeurCourant: string = '';
-  dateDemandeCourant: string = '';
-  //dateDemandeCourantFormat: Date = new Date();
-  dateDemandeCourantFormat: Date;
+  token: Token;
+  can_create: boolean;
+
+  searchValueNumero = '';
+  searchValueEquipement = '';
+  searchValueMarque = '';
+  searchValueModele = '';
+  searchValueDemandeur = '';
+
+  visibleNumero = false;
+  visibleEquipement = false;
+  visibleMarque = false;
+  visibleModele = false;
+  visibleDemandeur = false;
 
   constructor(
     private behaviorService: BehaviorService,
     private demandeProduitService: DemandeProduitService,
     private produitService: ProduitService,
     private demandeService: DemandeService,
-
+    private tokenService: TokenService
   ) {
+      this.token = tokenService.getAccessToken();
   }
 
   ngOnInit(): void {
@@ -127,7 +139,16 @@ export class HistoriqueDemandeComponent implements OnInit {
 
     this.listOfColumnHeader();
 
+    this.can_create = this.canCreate();
+
   }
+
+
+
+  canCreate(): boolean {
+      return (this.token.roles.indexOf(environment.ROLE_ADMIN) > -1) || (this.token.roles.indexOf(environment.ROLE_DEMANDEUR) > -1) || (this.token.roles.indexOf(environment.ROLE_VALIDATEUR) > -1)
+  }
+
 
   showModalMiddle(): void {
     this.isVisibleMiddle = true;
@@ -186,7 +207,7 @@ export class HistoriqueDemandeComponent implements OnInit {
       {
         title: 'Numero Série',
         compare: null,
-        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.numSerie.toLowerCase().localeCompare(b.produit.numSerie.toLowerCase()),
+        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.numSerie.localeCompare(b.produit.numSerie),
         //sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.numSerie - b.produit.numSerie,
       },
       {
@@ -205,7 +226,7 @@ export class HistoriqueDemandeComponent implements OnInit {
         sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.modele.libelle.localeCompare(b.produit.modele.libelle),
       },
       {
-        title: 'Personne concernée',
+        title: 'Demandeur',
         compare: null,
         sortFn: (a: DemandeProduit, b: DemandeProduit) => a.demande.personne.nom.localeCompare(b.demande.personne.nom),
       },
@@ -222,40 +243,76 @@ export class HistoriqueDemandeComponent implements OnInit {
     ];
   }
 
-  dateToShow: string ='';
-  timeToShow: string ='';
-
-  openDrawer(data: DemandeProduit): void {
-    this.descriptionCourante = data.description;
-
-    this.demandeProduitService.getDemandeProduitCreatedBy(data.id).subscribe(
-      (dataDmdProd: string[]) => {
-
-        console.log('string de demandeur');
-        console.log(dataDmdProd);
-        this.demandeurCourant = dataDmdProd[0];
-        this.dateDemandeCourant = dataDmdProd[1];
-
-        this.dateDemandeCourantFormat = new Date(this.dateDemandeCourant);
-        //this.dateDemandeCourantFormat.toUTCString();
-
-        this.dateToShow = this.dateDemandeCourantFormat.toLocaleDateString();
-        this.timeToShow = this.dateDemandeCourantFormat.toLocaleTimeString();
-
-        console.log('dateDemandeCourant ' +this.dateDemandeCourantFormat);
-        console.log('dateDemandeCourant '+this.dateDemandeCourant);
-
-      },
-      (error: HttpErrorResponse) => {
-        console.log('error get string createdBy createdDate by id demande produit ==>', error.message, ' ', error.status, ' ', error.statusText);
-      });
-
-
+  openDrawer(): void {
     this.visibleDrawer = true;
   }
 
   closeDrawer(): void {
     this.visibleDrawer = false;
+  }
+
+  /**
+   * demande: Demandeur;
+  description:	string;
+  id: number;
+  livrer: boolean;
+  produit: Produit;
+  valider: boolean;
+
+  marque: Marque;
+  modele: Modele;
+  gamme: Gamme;
+  personne: Personne;
+   */
+
+  resetNumero(): void {
+    this.searchValueNumero = '';
+    this.searchNumero();
+  }
+
+  searchNumero(): void {
+    this.visibleNumero = false;
+    this.listOfDisplayData = this.demandeProduitList.filter((item: DemandeProduit) => item.produit.numSerie.indexOf(this.searchValueNumero) !== -1);
+  }
+
+  resetEquipement(): void {
+    this.searchValueEquipement = '';
+    this.searchEquipement();
+  }
+
+  searchEquipement(): void {
+    this.visibleEquipement = false;
+    this.listOfDisplayData = this.demandeProduitList.filter((item: DemandeProduit) => item.gamme.libelle.indexOf(this.searchValueEquipement) !== -1);
+  }
+
+  resetMarque(): void {
+    this.searchValueMarque = '';
+    this.searchMarque();
+  }
+
+  searchMarque(): void {
+    this.visibleMarque = false;
+    this.listOfDisplayData = this.demandeProduitList.filter((item: DemandeProduit) => item.marque.libelle.indexOf(this.searchValueMarque) !== -1);
+  }
+
+  resetModele(): void {
+    this.searchValueModele = '';
+    this.searchModele();
+  }
+
+  searchModele(): void {
+    this.visibleModele = false;
+    this.listOfDisplayData = this.demandeProduitList.filter((item: DemandeProduit) => item.modele.libelle.indexOf(this.searchValueModele) !== -1);
+  }
+
+  resetDemandeur(): void {
+    this.searchValueDemandeur = '';
+    this.searchDemandeur();
+  }
+
+  searchDemandeur(): void {
+    this.visibleDemandeur = false;
+    this.listOfDisplayData = this.demandeProduitList.filter((item: DemandeProduit) => item.personne.nom.indexOf(this.searchValueDemandeur) !== -1 || item.personne.prenom.indexOf(this.searchValueDemandeur) !== -1);
   }
 
 }

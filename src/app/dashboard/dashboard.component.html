@@ -27,17 +27,15 @@
             </a>
           </li>
           <li nz-menu-item>
-            <a [routerLink]="['/dashboard/materiel/gamme']">
-              Equipement
-            </a>
-          </li>
-
-          <li nz-menu-item>
             <a [routerLink]="['/dashboard/materiel/modele']">
             Modèle
             </a>
           </li>
-
+          <li nz-menu-item>
+            <a [routerLink]="['/dashboard/materiel/gamme']">
+              Equipement
+            </a>
+          </li>
           <li nz-menu-item>
             <a [routerLink]="['/dashboard/materiel/etat']">
               Etat
@@ -65,7 +63,7 @@
               Historique
             </a>
           </li>
-          <li nz-menu-item>
+          <li nz-menu-item *ngIf="is_access">
             <a [routerLink]="['/dashboard/nouvelle-demande']">
               Nouvelle demande
             </a>
@@ -73,16 +71,16 @@
         </ul>
       </li>
 
-      <li nz-submenu nzIcon="team" nzTitle="Utilisateur">
+      <li *ngIf="is_admin || is_validateur" nz-submenu nzIcon="team" nzTitle="Utilisateur">
         <ul>
-          <li nz-menu-item>
+          <li nz-menu-item *ngIf="is_admin">
             <a [routerLink]="['/dashboard/utilisateur/service']">
               Service
             </a>
           </li>
-          <li nz-menu-item>
+          <li nz-menu-item *ngIf="is_admin">
             <a [routerLink]="['/dashboard/utilisateur/profil']">
-              Groupe de Profil
+              Profil
             </a>
           </li>
           <li nz-menu-item>
@@ -97,6 +95,12 @@
         <a [routerLink]="['/dashboard/apropos']">
         <i nz-icon nzType="info-circle"></i>
         <span>A propos</span>
+        </a>
+      </li>
+      <li nz-menu-item>
+        <a href="#" (click)="logout()">
+            <i nz-icon nzType="poweroff" nzTheme="outline"></i>
+            <span>Déconnexion</span>
         </a>
       </li>
     </ul>

@@ -6,6 +6,9 @@ import {MagasinService} from '../../../services/dashboard/magasin.service';
 import {MarqueService} from '../../../services/dashboard/marque.service';
 import {Marque} from '../../../models/marque';
 import {HttpErrorResponse} from '@angular/common/http';
+import { TokenService } from 'src/app/services/token/token.service';
+import { Token } from 'src/app/models/token.model';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-marque',
@@ -22,11 +25,16 @@ export class MarqueComponent implements OnInit {
 
   listOfColumn: any = [];
 
+  is_admin: boolean;
+
+  token: Token;
+
   constructor(
     private behaviorService: BehaviorService,
     private fb: FormBuilder,
-    private marqueService: MarqueService
-  ) { }
+    private marqueService: MarqueService,
+    private tokenService: TokenService
+  ) { this.token = this.tokenService.getAccessToken(); }
 
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Matériel', 'Marque']);
@@ -37,7 +45,14 @@ export class MarqueComponent implements OnInit {
     this.list();
 
     this.listOfColumnHeadeer();
-  }
+    
+    this.is_admin = this.canWrite();  
+
+}
+
+canWrite(): boolean {
+  return this.token.roles.indexOf(environment.ROLE_ADMIN) > -1;
+}
 
   makeMarqueForm(magasin: Magasin){
     this.validateMagasinForm = this.fb.group({
@@ -56,7 +71,6 @@ export class MarqueComponent implements OnInit {
     }
     this.makeMarqueForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
-    this.indexOfTab = 0;
   }
 
 

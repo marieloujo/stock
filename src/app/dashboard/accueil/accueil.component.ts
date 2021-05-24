@@ -2,22 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import {BehaviorService} from '../../services/common/behavior.service';
 import {DemandeProduitService} from '../../services/dashboard/demande-produit.service';
 import {DemandeProduit} from '../../models/demande-produit';
-import {Marque} from '../../models/marque';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProduitService} from '../../services/dashboard/produit.service';
 import {DemandeService} from '../../services/dashboard/demande.service';
 import {Produit} from '../../models/produit';
 import {Demande} from '../../models/demande';
-import {Magasin} from '../../models/magasin';
-import {Gamme} from '../../models/gamme';
-import {GammeService} from '../../services/dashboard/gamme.service';
+import { TokenService } from 'src/app/services/token/token.service';
+import { Token } from 'src/app/models/token.model';
+import {environment} from '../../../environments/environment';
 
-interface StatsPer_dayWeekMonthYear {
-  day: number;
-  week: number;
-  month: number;
-  year: number;
-}
 
 @Component({
   selector: 'app-accueil',
@@ -30,21 +23,21 @@ export class AccueilComponent implements OnInit {
 
   listOfColumn: any = [];
   listOfDisplayData;
+  token: Token;
+  environment = environment;
+  livreur: boolean;
+  validateur: boolean;
 
-  statsCOunt: StatsPer_dayWeekMonthYear = new class implements StatsPer_dayWeekMonthYear {
-    day: number;
-    month: number;
-    week: number;
-    year: number;
-  };
 
   constructor(
     private behaviorService: BehaviorService,
     private demandeProduitService: DemandeProduitService,
     private produitService: ProduitService,
     private demandeService: DemandeService,
-    private gammeService: GammeService,
-  ) { }
+    private tokenService: TokenService
+  ) {
+    this.token = this.tokenService.getAccessToken(); 
+   }
 
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Tableau de bord']);
@@ -53,24 +46,23 @@ export class AccueilComponent implements OnInit {
 
     this.listOfColumnHeader();
 
-    this.getStatsOfDemande();
+    this.livreur = this.canLivrer();
+    this.validateur = this.canValider();
+    console.log(this.livreur+" "+this.validateur)
+
 
   }
 
-  getStatsOfDemande(){
 
-    this.demandeService.getStatsDayWeekMonthYear().subscribe(
-      (data: any) => {
-        console.log('Les stats ! => ');
-        console.log(data);
-        this.statsCOunt.day = data[0];
-        this.statsCOunt.week = data[1];
-        this.statsCOunt.month = data[2];
-        this.statsCOunt.year = data[3];
-      }
-    )
-
+  canValider(): boolean {
+    return this.token.roles.indexOf(environment.ROLE_VALIDATEUR) > -1;
   }
+
+
+  canLivrer(): boolean {
+    return this.token.roles.indexOf(environment.ROLE_GESTIONNAIRE) > -1;
+}
+
 
   validerDemande(demandeProduit: DemandeProduit){
 
@@ -98,35 +90,6 @@ export class AccueilComponent implements OnInit {
         console.log('Demande Produit update ==>', data);
 
         this.listDemandeProduitDescCreatedDate();
-
-
-        //Modification de la gamme (equipement) concerné
-        //let gm: Gamme[] = this.gammeList.filter(g => g.id == newProduit.gamme.id);
-        let gm: Gamme = new Gamme();
-        this.gammeService.getGammeById(demandeProduit.gamme.id).subscribe(
-          (data: Gamme) => {
-
-            gm = data;
-            gm.nbrStock -= 1;
-
-            this.gammeService.updateGamme(gm).subscribe(
-              (data: Gamme) => {
-                console.log('Update ok');
-                console.log(data);
-              },
-              (error: HttpErrorResponse) => {
-                console.log('Update non ok');
-              });
-
-            console.log('Recherche By Id de Gamme ok');
-
-
-          },
-          (error: HttpErrorResponse) => {
-            console.log('Recherche By Id de Gamme non ok');
-          });
-
-
 
       },
       (error: HttpErrorResponse) => {

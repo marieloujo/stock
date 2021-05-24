@@ -4,6 +4,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Etat} from '../../../models/etat';
 import {EtatService} from '../../../services/dashboard/etat.service';
 import {HttpErrorResponse} from '@angular/common/http';
+import { TokenService } from 'src/app/services/token/token.service';
+import { Token } from 'src/app/models/token.model';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-etat',
@@ -22,11 +25,17 @@ export class EtatComponent implements OnInit {
 
   etatExist = false;
 
+  is_admin: boolean;
+
+  token: Token;
+
   constructor(
     private fb: FormBuilder,
     private etatService: EtatService,
     private behaviorService: BehaviorService,
+    private tokenService: TokenService
   ) {
+      this.token = this.tokenService.getAccessToken();
   }
 
   ngOnInit(): void {
@@ -38,6 +47,12 @@ export class EtatComponent implements OnInit {
 
     this.listOfColumnHeadeer();
 
+    this.is_admin = this.canWrite();  
+
+  }
+
+  canWrite(): boolean {
+    return this.token.roles.indexOf(environment.ROLE_ADMIN) > -1;
   }
 
   makeEtatForm(etat: Etat) {
@@ -59,7 +74,6 @@ export class EtatComponent implements OnInit {
     }
     this.makeEtatForm(null);
     console.log('Tab en cours ==> ', this.indexOfTab);
-    this.indexOfTab = 0;
   }
 
   updateForm(data: Etat) {

@@ -1,34 +1,108 @@
-<!--<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">-->
+<!--form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
 <div style="height: 100%; width: 100%; ">
+  <form nz-form  [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()" style="display: block; margin-left: auto; margin-right: auto; width: 40%; margin-top: 20%;" >
+    
+    <div nz-row>
+        <div nz-col nzSpan="24">
+          <nz-form-item>
+            <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
+              <input formControlName="userName" nz-input placeholder="Username"/>
+            </nz-form-control>
+          </nz-form-item> 
+        </div>
+    </div>
 
-  <form nz-form  [formGroup]="validateForm" class="login-form" style="display: block; margin-left: auto; margin-right: auto; width: 40%; margin-top: 50%;" >
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your username!">
-        <nz-input-group nzPrefixIcon="user">
-          <input type="text" nz-input formControlName="userName" placeholder="Username" />
-        </nz-input-group>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Password!">
-        <nz-input-group nzPrefixIcon="lock">
-          <input type="password" nz-input formControlName="password" placeholder="Password" />
-        </nz-input-group>
-      </nz-form-control>
-    </nz-form-item>
+    <div nz-row>
+        <div nz-col nzSpan="24">
+          <nz-form-item>
+            <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
+              <input formControlName="password" nz-input placeholder="Password"/>
+            </nz-form-control>
+          </nz-form-item> 
+        </div>
+    </div>
+
+
     <div nz-row class="login-form-margin">
-      <div nz-col [nzSpan]="12">
-        <label nz-checkbox formControlName="remember">
-          <span>Remember me</span>
-        </label>
-      </div>
       <div nz-col [nzSpan]="12">
         <a class="login-form-forgot">Forgot password</a>
       </div>
     </div>
+    
     <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">Log in</button>
     Or <a> register now! </a>
+
   </form>
 
-</div>
+</div-->
+
+
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-5">
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-10">
+          <div class="wrap d-md-flex">
+            <div class="text-wrap p-4 p-lg-5 text-center d-flex align-items-center order-md-last">
+              <div class="text w-100">
+                <h2>Bolloré - Welcome in StockUp</h2>
+                <p>Don't have an account?</p>
+                <a href="#" class="btn btn-white btn-outline-white">Sign Up</a>
+              </div>
+            </div>
+            <div class="login-wrap p-4 p-lg-5">
+              <div class="d-flex">
+                <div class="w-100">
+                  <h3 class="mb-4">Sign In</h3>
+                </div>
+                <div class="w-100">
+                  <p class="social-media d-flex justify-content-end">
+                  <a href="#" class="social-icon d-flex align-items-center justify-content-center"><span class="fa fa-facebook"></span></a>
+                  <a href="#" class="social-icon d-flex align-items-center justify-content-center"><span class="fa fa-twitter"></span></a>
+                  </p>
+                </div>
+              </div>
+              <form nz-form  [formGroup]="validateForm" class="signin-form">
+                <div class="form-group mb-3">
+                  <label class="label" for="name">Username</label>
+                  <input type="text" class="form-control" [ngClass]="(validateForm.get('username').errors && formSubmitted) || (login_echec) ? 'is-invalid':''"
+                    placeholder="Username" nz-input formControlName="username" required>
+                    <span *ngIf="formSubmitted" class="invalid-feedback w-100">{{(login_echec == false) ? 'Merci de renseigner ce champs!':''}}</span>
+                </div>
+                <div class="form-group mb-3">
+                  <label class="label" for="password">Password</label>
+                  <input type="password" class="form-control" [ngClass]="(validateForm.get('password').errors && formSubmitted) || (login_echec) ? 'is-invalid':''"
+                  placeholder="Password" nz-input formControlName="password" required>
+                  <span *ngIf="formSubmitted" class="invalid-feedback w-100">{{(login_echec == false) ? 'Merci de renseigner ce champs!':''}}</span>
+                  <span *ngIf="login_echec" class="invalid-feedback w-100">Username ou mot de passe incorrect</span>
+                </div>
+                <div class="form-group">
+                  <button nz-button class="form-control btn btn-primary px-3" (click)="submitForm()">Sign In</button>
+                </div>
+                <div class="form-group d-md-flex">
+                  <div class="w-50 text-left">
+                    <label class="checkbox-wrap checkbox-primary mb-0">Remember Me
+                      <input type="checkbox" checked>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="w-50 text-md-right">
+                    <a href="#">Forgot Password</a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  
+
 
