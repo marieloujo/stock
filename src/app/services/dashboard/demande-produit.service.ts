@@ -35,4 +35,8 @@ export class DemandeProduitService {
     return this.http.get(`${this.url}/list/desc-create-date`);
   }
 
+  getDemandeProduitCreatedBy(id: number): Observable<Object> {
+    return this.http.get(`${this.url}/demande-produit-createdBy/${id}`);
+  }
+
 }

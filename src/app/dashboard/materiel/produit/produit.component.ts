@@ -34,6 +34,7 @@ export class ProduitComponent implements OnInit {
   gammeList: Gamme[];
   marqueList: Marque[];
   modeleList: Modele[];
+  etatList: Etat[];
   produitByMagasinIdList: Produit[] = [];
   etatCourant: Etat = null;
 
@@ -67,7 +68,7 @@ export class ProduitComponent implements OnInit {
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Matériel', 'Produit']);
 
-    this.makeProduitForm(null, null);
+    this.makeProduitForm(null, null, null);
 
     this.listOfColumnHeader();
     this.listMagasin();
@@ -75,6 +76,7 @@ export class ProduitComponent implements OnInit {
     this.listMarque();
     this.listModele();
     this.list();
+    this.listEtat();
 
     this.getEtatByCode("NEW");
 
@@ -85,7 +87,7 @@ export class ProduitComponent implements OnInit {
     console.log(this.magasinChoice);
   }
 
-  makeProduitForm(produit: Produit, magasinProduit: MagasinProduit){
+  makeProduitForm(produit: Produit, magasinProduit: MagasinProduit, etatProduit: EtatProduit){
     this.validateProduitForm = this.fb.group({
       id: [produit != null ? produit.id : null],
       numSerie: [produit != null ? produit.numSerie : null,
@@ -95,6 +97,8 @@ export class ProduitComponent implements OnInit {
       marque: [produit != null ? produit.marque : null,
         [Validators.required]],
       gamme: [produit != null ? produit.gamme : null,
+        [Validators.required]],
+      etat: [etatProduit != null ? etatProduit.etat : null,
         [Validators.required]],
       description: [produit != null ? produit.description : null],
       magazin: [magasinProduit != null ? magasinProduit.magazin : null,
@@ -123,7 +127,7 @@ export class ProduitComponent implements OnInit {
       this.validateProduitForm.controls[key].markAsPristine();
       this.validateProduitForm.controls[key].updateValueAndValidity();
     }
-    this.makeProduitForm(null, null);
+    this.makeProduitForm(null, null, null);
     this.indexOfTab = 0;
     //this.pageIndex = 1;
   }
@@ -185,7 +189,8 @@ export class ProduitComponent implements OnInit {
 
             let newEtatProduit: EtatProduit = new EtatProduit();
             newEtatProduit.actuel = true;
-            newEtatProduit.etat = this.etatCourant;
+            //newEtatProduit.etat = this.etatCourant;
+            newEtatProduit.etat = formData.etat;
             newEtatProduit.produit = data;
 
             this.etatProduitService.createEtatProduit(newEtatProduit).subscribe(
@@ -198,7 +203,36 @@ export class ProduitComponent implements OnInit {
 
               });
 
-            this.makeProduitForm(null, null);
+            //Modification de la gamme (equipement) concerné
+            //let gm: Gamme[] = this.gammeList.filter(g => g.id == newProduit.gamme.id);
+            let gm: Gamme = new Gamme();
+            this.gammeService.getGammeById(newProduit.gamme.id).subscribe(
+              (data: Gamme) => {
+
+                gm = data;
+                gm.nbrStock += 1;
+
+                this.gammeService.updateGamme(gm).subscribe(
+                  (data: Gamme) => {
+                    console.log('Update ok');
+                    console.log(data);
+                  },
+                  (error: HttpErrorResponse) => {
+                    console.log('Update non ok');
+                  });
+
+                console.log('Recherche By Id de Gamme ok');
+
+
+              },
+              (error: HttpErrorResponse) => {
+                console.log('Recherche By Id de Gamme non ok');
+              });
+
+
+
+
+            this.makeProduitForm(null, null, null);
             console.log('Enregistrement produit ok');
             this.indexOfTab = 0;
             //this.pageIndex = 1;
@@ -283,6 +317,17 @@ export class ProduitComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.log('error getList Produit ==>', error.message, ' ', error.status, ' ', error.statusText);
+      });
+  }
+
+  listEtat(): void {
+    this.etatService.getList().subscribe(
+      (data: Etat[]) => {
+        this.etatList = [...data];
+        console.log('EtatList ==>', this.etatList);
+      },
+      (error: HttpErrorResponse) => {
+        console.log('error getList etat ==>', error.message, ' ', error.status, ' ', error.statusText);
       });
   }
 

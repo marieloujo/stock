@@ -7,6 +7,10 @@ import {Personne} from './personne';
 
 export class DemandeProduit {
 
+  createdBy: string;
+  createdDate: Date;
+  lastModifiedBy: string;
+  lastModifiedDate: Date;
   demande: Demande;
   description:	string;
   id: number;

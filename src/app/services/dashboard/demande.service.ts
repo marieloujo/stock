@@ -36,4 +36,8 @@ export class DemandeService {
     return this.http.get(`${this.url}/get-by-id/${id}`);
   }
 
+  getStatsDayWeekMonthYear(): Observable<Object> {
+    return this.http.get(`${this.url}/getStats-day-week-mounth-year `);
+  }
+
 }
