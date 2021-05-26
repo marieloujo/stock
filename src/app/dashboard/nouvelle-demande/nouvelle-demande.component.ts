@@ -15,6 +15,8 @@ import {Mouvement} from '../../models/Mouvement';
 import {DemandeService} from '../../services/dashboard/demande.service';
 import {DemandeProduitService} from '../../services/dashboard/demande-produit.service';
 import { Router } from '@angular/router';
+import {Etat} from '../../models/etat';
+import {EtatService} from '../../services/dashboard/etat.service';
 
 @Component({
   selector: 'app-nouvelle-demande',
@@ -30,6 +32,7 @@ export class NouvelleDemandeComponent implements OnInit {
   newDemandeList: NewDemande[];
   mouvementList: Mouvement[];
   demandeProduitList: DemandeProduit[] = [];
+  etatList: Etat[];
 
   produitChoice: Produit;
   personneDemande: Personne;
@@ -45,8 +48,6 @@ export class NouvelleDemandeComponent implements OnInit {
 
   countNew: number = 0;
 
-
-
   constructor(
     private behaviorService: BehaviorService,
     private produitService: ProduitService,
@@ -55,7 +56,8 @@ export class NouvelleDemandeComponent implements OnInit {
     private demandeService: DemandeService,
     private demandeProduitService: DemandeProduitService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private etatService: EtatService,
   ) {
   }
 
@@ -72,6 +74,19 @@ export class NouvelleDemandeComponent implements OnInit {
 
     this.listMouvement();
 
+    this.listEtat();
+
+  }
+
+  listEtat(): void {
+    this.etatService.getList().subscribe(
+      (data: Etat[]) => {
+        this.etatList = [...data];
+        console.log('EtatList ==>', this.etatList);
+      },
+      (error: HttpErrorResponse) => {
+        console.log('error getList etat ==>', error.message, ' ', error.status, ' ', error.statusText);
+      });
   }
 
   listProduit(): void {
@@ -123,11 +138,14 @@ export class NouvelleDemandeComponent implements OnInit {
       produit: [demandeProduit != null ? demandeProduit.produit : null,
         [Validators.required]],
       demande: [demandeProduit != null ? demandeProduit.demande : null],
+      /*personne: [demandeProduit != null ? demandeProduit.demande.personne : null, {value: this.countNew, disabled: true},
+        [Validators.required]],*/
       personne: [demandeProduit != null ? demandeProduit.demande.personne : null,
         [Validators.required]],
       description: [demandeProduit != null ? demandeProduit.description : null],
       valider: [demandeProduit != null ? demandeProduit.valider : null],
       livrer: [demandeProduit != null ? demandeProduit.livrer : null],
+      //mouvement: [demandeProduit != null ? demandeProduit.demande.mouvement : null, {value: this.countNew, disabled: true}],
       mouvement: [demandeProduit != null ? demandeProduit.demande.mouvement : null],
     });
   }

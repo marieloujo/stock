@@ -38,7 +38,7 @@ export class MagasinComponent implements OnInit {
     private magasinService: MagasinService,
     private tokenService: TokenService
     //private nzMessageService: NzMessageService
-  ) { 
+  ) {
       this.token = tokenService.getAccessToken();
   }
 
@@ -51,7 +51,7 @@ export class MagasinComponent implements OnInit {
 
     this.listOfColumnHeadeer();
 
-    this.is_admin = this.canWrite();    
+    this.is_admin = this.canWrite();
 
   }
 
@@ -90,6 +90,7 @@ export class MagasinComponent implements OnInit {
     if (this.validateMagasinForm.valid) {
 
       const formData = this.validateMagasinForm.value;
+      //formData.libelle.trim();
       if (formData.id == null) {
         this.magasinService.createMagasin(formData).subscribe(
           (data: any) => {

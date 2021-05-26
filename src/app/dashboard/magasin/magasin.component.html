@@ -58,9 +58,9 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Libellé</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input formControlName="libelle" nz-input placeholder="saisir le nom du magasin"/>
+              <input formControlName="libelle" nz-input placeholder="saisir le nom du magasin" (keyup)="validateMagasinForm.patchValue({libelle: $event.target.value.toUpperCase()})"/>
             </nz-form-control>
-          </nz-form-item> 
+          </nz-form-item>
         </div>
 
         <div nz-col nzSpan="24">

@@ -57,7 +57,7 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Libellé</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input formControlName="libelle" nz-input placeholder="saisir le nom du service"/>
+              <input formControlName="libelle" nz-input placeholder="saisir le nom du service" (keyup)="validateServiceForm.patchValue({libelle: $event.target.value.toUpperCase()})"/>
             </nz-form-control>
           </nz-form-item>
         </div>

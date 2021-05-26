@@ -40,7 +40,7 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Code</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input formControlName="code" nz-input placeholder="saisir le code"/>
+              <input formControlName="code" nz-input placeholder="saisir le code" (keyup)="validateEtatForm.patchValue({code: $event.target.value.toUpperCase()})"/>
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -48,7 +48,7 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Libellé</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input formControlName="libelle" nz-input placeholder="saisir le libellé"/>
+              <input formControlName="libelle" nz-input placeholder="saisir le libellé" (keyup)="validateEtatForm.patchValue({libelle: $event.target.value.toUpperCase()})"/>
             </nz-form-control>
           </nz-form-item>
         </div>

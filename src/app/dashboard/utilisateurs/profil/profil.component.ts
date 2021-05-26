@@ -6,6 +6,9 @@ import { ServiceB } from 'src/app/models/service-b';
 import { ProfilService } from 'src/app/services/dashboard/profil.service';
 import {BehaviorService} from '../../../services/common/behavior.service';
 import {Magasin} from '../../../models/magasin';
+import {Role} from '../../../models/role';
+import {RolesEnumService} from '../../../services/common/roles-enum.service';
+import {RolesService} from '../../../services/dashboard/roles.service';
 
 @Component({
   selector: 'app-profil',
@@ -14,7 +17,8 @@ import {Magasin} from '../../../models/magasin';
 })
 export class ProfilComponent implements OnInit {
 
-  profilList: Profil[];
+  //profilList: Profil[];
+  profilList: Role[];
 
   listOfColumn: any = [];
 
@@ -31,6 +35,8 @@ export class ProfilComponent implements OnInit {
     private behaviorService: BehaviorService,
     private fb: FormBuilder,
     private profilService: ProfilService,
+    private rolesEnumService: RolesEnumService,
+    private rolesService: RolesService,
   ) { }
 
   ngOnInit(): void {
@@ -49,15 +55,24 @@ export class ProfilComponent implements OnInit {
       {
         title: 'Libellé',
         compare: null,
-        sortFn: (a: Magasin, b: Magasin) => a.libelle.localeCompare(b.libelle),
+        /*sortFn: (a: Profil, b: Profil) => a.libelle.localeCompare(b.libelle),*/
+        sortFn: (a: Role, b: Role) => a.name.localeCompare(b.name),
       },
     ];
   }
 
-  makeProfilForm(profil: Profil){
+  /*makeProfilForm(profil: Profil){
     this.validateProfilForm = this.fb.group({
       id: [profil != null ? profil.id : null],
       libelle: [profil != null ? profil.libelle : null,
+        [Validators.required]],
+    });
+  }*/
+
+  makeProfilForm(profil: Role){
+    this.validateProfilForm = this.fb.group({
+      id: [profil != null ? profil.id : null],
+      name: [profil != null ? profil.name : null,
         [Validators.required]],
     });
   }
@@ -74,12 +89,12 @@ export class ProfilComponent implements OnInit {
     this.indexOfTab = 0;
   }
 
-  updateForm(data: Profil){
+  /*updateForm(data: Role){
     this.makeProfilForm(data);
     this.indexOfTab = 1;
   }
 
-  confirmMsgDelete(data: Profil){
+  confirmMsgDelete(data: Role){
 
     this.profilService.deleteProfil(data.id).subscribe(
       (data01: any) => {
@@ -92,7 +107,7 @@ export class ProfilComponent implements OnInit {
         console.log('error deleteEtat ==>', error.message, ' ', error.status, ' ', error.statusText);
       }
     );
-  }
+  }*/
 
 
   cancelMsgDelete(): void {
@@ -106,11 +121,11 @@ export class ProfilComponent implements OnInit {
 
   search(): void {
     this.visible = false;
-    this.listOfDisplayData = this.profilList.filter((item: Profil) => item.libelle.indexOf(this.searchValue) !== -1);
+    this.listOfDisplayData = this.profilList.filter((item: Role) => item.name.indexOf(this.searchValue) !== -1);
   }
 
 
-  submitProfilForm(): void {
+  /*submitProfilForm(): void {
     for (const i in this.validateProfilForm.controls) {
       this.validateProfilForm.controls[i].markAsDirty();
       this.validateProfilForm.controls[i].updateValueAndValidity();
@@ -158,9 +173,9 @@ export class ProfilComponent implements OnInit {
 
     }
 
-  }
+  }*/
 
-  list(): void {
+  /*list(): void {
     this.profilService.getList().subscribe(
       (data: any) => {
         this.profilList = data;
@@ -170,6 +185,19 @@ export class ProfilComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.log('error getList profil ==>', error.message, ' ', error.status, ' ', error.statusText);
+      });
+  }*/
+
+  list(): void {
+    this.rolesService.getList().subscribe(
+      (data: any) => {
+        this.profilList = data;
+        console.log('Profil List ==>', this.profilList);
+        this.listOfDisplayData = [...this.profilList];
+        this.pageIndex = 1;
+      },
+      (error: HttpErrorResponse) => {
+        console.log('error getList profil (roles) ==>', error.message, ' ', error.status, ' ', error.statusText);
       });
   }
 

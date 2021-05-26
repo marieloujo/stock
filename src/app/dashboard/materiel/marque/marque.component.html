@@ -39,7 +39,8 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Libellé</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input formControlName="libelle" nz-input placeholder="saisir le nom de la marque"/>
+              <!--<input formControlName="libelle" nz-input placeholder="saisir le nom de la marque" [ngModel]="libelle" (ngModelChange)="libelle = $event.toUpperCase()"/>-->
+              <input formControlName="libelle" nz-input placeholder="saisir le nom de la marque" (keyup)="validateMagasinForm.patchValue({libelle: $event.target.value.toUpperCase()})"/>
             </nz-form-control>
           </nz-form-item>
         </div>

@@ -42,7 +42,7 @@
         <td>{{ data?.email }}</td>
         <td>{{ data?.sexe }}</td>
         <td>{{ data?.roles[0].name }}</td>
-        <td>{{ data?.serviceB.libelle }}</td>
+        <td>{{ data?.serviceB?.libelle }}</td>
         <td>
           <nz-space>
             <nz-space-item>
@@ -190,7 +190,7 @@
         <div nz-col nzSpan="12" style="padding-right: 1.5em">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">E-mail</nz-form-label>
-            <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner un email valid!">
+            <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner un email valide!">
               <input formControlName="email" nz-input placeholder="saisir le mail" [email]="true"/>
             </nz-form-control>
           </nz-form-item>
@@ -209,7 +209,7 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Mot de passe </nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input nz-input formControlName="password" placeholder="saisir le mot de passe"/>
+              <input nz-input formControlName="password" placeholder="saisir le mot de passe" type="password"/>
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -218,7 +218,7 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Confirmer le Mot de passe </nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input nz-input placeholder="re-saisir le mot de passe"/>
+              <input nz-input placeholder="re-saisir le mot de passe" type="password"/>
             </nz-form-control>
           </nz-form-item>
         </div>

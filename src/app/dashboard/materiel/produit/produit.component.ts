@@ -343,7 +343,6 @@ canWrite(): boolean {
       });
   }
 
-
   listMagasin(): void {
     this.magasinService.getList().subscribe(
       (data: Magasin[]) => {
