@@ -70,7 +70,6 @@ export class AccueilComponent implements OnInit {
     this.validateur = this.canValider();
     console.log(this.livreur+" "+this.validateur)
 
-
   }
 
   getStatsOfDemande(){
@@ -101,6 +100,11 @@ export class AccueilComponent implements OnInit {
   validerDemande(demandeProduit: DemandeProduit){
 
     demandeProduit.valider = true;
+    demandeProduit.validateur = String(this.token.username);
+    demandeProduit.validationDate = new Date();
+
+    console.log('update demande Produit');
+    console.log(demandeProduit);
 
     this.demandeProduitService.updateDemandeProduit(demandeProduit).subscribe(
       (data: any) => {
@@ -118,6 +122,8 @@ export class AccueilComponent implements OnInit {
   livrerDemande(demandeProduit: DemandeProduit){
 
     demandeProduit.livrer = true;
+    demandeProduit.gestionnaire = String(this.token.username);
+    demandeProduit.dateLivraison = new Date();
 
     this.demandeProduitService.updateDemandeProduit(demandeProduit).subscribe(
       (data: any) => {

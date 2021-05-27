@@ -17,6 +17,10 @@ export class DemandeProduit {
   livrer: boolean;
   produit: Produit;
   valider: boolean;
+  validateur: string;
+  validationDate: Date;
+  gestionnaire: string;
+  dateLivraison: Date;
 
   marque: Marque;
   modele: Modele;

@@ -62,7 +62,7 @@
         <td>{{ data.modele?.libelle }}</td>
         <td>{{ data.personne?.nom + ' ' + data.personne?.prenom }}</td>
 
-        <td>
+        <td *ngIf="validateur || livreur">
           <button *ngIf="validateur" [disabled]="data.valider" (click)="validerDemande(data)" nz-button nzType="primary" style="margin-right: 2px;"> Valider
           </button>
 
