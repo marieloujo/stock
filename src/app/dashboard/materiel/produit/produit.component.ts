@@ -246,6 +246,7 @@ canWrite(): boolean {
 
             this.makeProduitForm(null, null, null);
             console.log('Enregistrement produit ok');
+            this.list();
             this.indexOfTab = 0;
             //this.pageIndex = 1;
 
@@ -297,32 +298,33 @@ canWrite(): boolean {
         this.produitList = [...data];
         console.log('Produit List ==>', this.produitList);
 
-        /*for (let prod of this.produitList){
+        for (let prod of this.produitList){
+          console.log('le produit ==> ');
+          console.log(prod);
+          let etatProd: EtatProduit = prod.etatProduits.find(p => p.actuel == true);
+          console.log(etatProd);
 
-          for (let etatProd of prod.etatProduits){
-            if (etatProd.actuel == true){
-              this.etatProduitService.getEtatProduitById(etatProd.id).subscribe(
-                (dataEtatProd: EtatProduit) => {
-                  prod.etat = dataEtatProd.etat;
-                },
-                (error: HttpErrorResponse) => {
-                  console.log('error get by id etatProduit ==>', error.message, ' ', error.status, ' ', error.statusText);
-                });
-            }
-          }
+          this.etatProduitService.getEtatProduitById(etatProd.id).subscribe(
+            (dataEtatProd: EtatProduit) => {
+              console.log('DataEtatProd');
+              console.log(dataEtatProd.etat.libelle);
+              prod.etat = dataEtatProd.etat
+            },
+            (error: HttpErrorResponse) => {
+              console.log('error get by id etatProduit ==>', error.message, ' ', error.status, ' ', error.statusText);
+            });
 
-          for (let magProd of prod.magazinProduits){
-            if (magProd.actuel == true){
-              this.magasinProduitService.getMagasinProduitById(magProd.id).subscribe(
-                (dataMagProd: MagasinProduit) => {
-                  prod.magasin = dataMagProd.magazin;
-                },
-                (error: HttpErrorResponse) => {
-                  console.log('error get by id etatProduit ==>', error.message, ' ', error.status, ' ', error.statusText);
-                });
-            }
-          }
-        }*/
+          let magProd: MagasinProduit = prod.magazinProduits.find(m => m.actuel == true);
+          this.magasinProduitService.getMagasinProduitById(magProd.id).subscribe(
+            (dataMagProd: MagasinProduit) => {
+              console.log('DataMagProd');
+              console.log(dataMagProd.magazin.libelle);
+              prod.magasin = dataMagProd.magazin;
+            },
+            (error: HttpErrorResponse) => {
+              console.log('error get by id magasinProduit ==>', error.message, ' ', error.status, ' ', error.statusText);
+            });
+        }
 
         this.listOfDisplayData = [...this.produitList];
         //this.pageIndex = 1;

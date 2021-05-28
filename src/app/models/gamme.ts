@@ -6,6 +6,7 @@ export class Gamme {
   libelle: string;
   description: string;
   nbrStock: number;
+  stockMin: number;
   produits: Produit[];
 
 }

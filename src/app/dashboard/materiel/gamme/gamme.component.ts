@@ -60,6 +60,8 @@ export class GammeComponent implements OnInit {
       id: [gamme != null ? gamme.id : null],
       libelle: [gamme != null ? gamme.libelle : null,
         [Validators.required]],
+      stockMin: [gamme != null ? gamme.stockMin : null,
+        [Validators.required]],
       description: [gamme != null ? gamme.description : null,],
     });
   }
@@ -115,6 +117,11 @@ export class GammeComponent implements OnInit {
         title: 'Description',
         compare: null,
         priority: false
+      },
+      {
+        title: 'Stock minimal',
+        compare: (a: Gamme, b: Gamme) => a.stockMin - b.stockMin,
+        priority: 3
       },
       /*{
         title: 'Math Score',

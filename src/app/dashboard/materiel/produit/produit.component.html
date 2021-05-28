@@ -59,13 +59,12 @@
         <tbody>
         <tr *ngFor="let data of sortTable.data">
           <td>{{ data?.numSerie }}</td>
-          <td>{{ data?.gamme.libelle }}</td>
-          <td>{{ data?.marque.libelle }}</td>
-          <td>{{ data?.modele.libelle }}</td>
-          <!--<td>{{ data?.etat.libelle }}</td>
-          <td>{{ data?.magasin.libelle }}</td>-->
-          <td> -- </td>
-          <td> -- </td>
+          <td>{{ data?.gamme?.libelle }}</td>
+          <td>{{ data?.marque?.libelle }}</td>
+          <td>{{ data?.modele?.libelle }}</td>
+          <td>{{ data?.etat?.libelle }}</td>
+          <td>{{ data?.magasin?.libelle }}</td>
+
           <!--<td>{{ data.etatProduits.etat}}</td>
           <td>{{ data.magazinProduits.magazin }}</td>-->
           <td *ngIf="is_admin">

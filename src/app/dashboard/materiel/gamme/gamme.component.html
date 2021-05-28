@@ -12,6 +12,7 @@
       <tr *ngFor="let data of sortTable.data">
         <td>{{ data?.libelle }}</td>
         <td>{{ data?.description }}</td>
+        <td>{{ data?.stockMin }}</td>
         <td *ngIf="is_admin">
           <nz-space>
             <nz-space-item>
@@ -36,11 +37,20 @@
 
     <form [formGroup]="validateMagasinForm" nz-form>
       <div nz-row>
-        <div nz-col nzSpan="24">
+        <div nz-col nzSpan="16" style="padding-right: 1.5em">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Libellé</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
               <input formControlName="libelle" nz-input placeholder="saisir le libellé" (keyup)="validateMagasinForm.patchValue({libelle: $event.target.value.toUpperCase()})"/>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="8">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="24">Stock minimal</nz-form-label>
+            <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
+              <input formControlName="stockMin" nz-input placeholder="saisir le stockMin" [type]="'number'" [min]="1"/>
             </nz-form-control>
           </nz-form-item>
         </div>
