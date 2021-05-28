@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BehaviorService} from '../../../services/common/behavior.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Magasin} from '../../../models/magasin';
-import {MagasinService} from '../../../services/dashboard/magasin.service';
 import {Personne} from '../../../models/personne';
 import {PersonneService} from '../../../services/dashboard/personne.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProfilService} from '../../../services/dashboard/profil.service';
 import {ServiceBService} from '../../../services/dashboard/service-b.service';
-import {Produit} from '../../../models/produit';
 import {Profil} from '../../../models/profil';
 import {ServiceB} from '../../../models/service-b';
-import { Role } from 'src/app/models/role';
+import {Role} from 'src/app/models/role';
+import {TokenService} from '../../../services/token/token.service';
+import {Token} from '../../../models/token.model';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-user-run',
@@ -26,8 +27,10 @@ export class UserRunComponent implements OnInit {
   profilList: Role[];
   serviceBList: ServiceB[];
 
-  indexOfTab: number;
+  perso: Personne = new Personne();
+  rolePersonne: Role;
 
+  indexOfTab: number;
   listOfColumn: any = [];
 
   searchValueNom = '';
@@ -47,17 +50,25 @@ export class UserRunComponent implements OnInit {
   listOfDisplayData;
   pageIndex;
 
+  token: Token;
+  adminIsConnect: boolean;
+
   constructor(
     private behaviorService: BehaviorService,
     private fb: FormBuilder,
     private personneService: PersonneService,
     private profilService: ProfilService,
     private serviceBService: ServiceBService,
+    private tokenService: TokenService,
     //private nzMessageService: NzMessageService
-  ) { }
+  ) {
+    this.token = this.tokenService.getAccessToken();
+  }
+
 
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Gestion Utilisateur', 'User']);
+
 
     this.makePersonneForm(null);
 
@@ -68,13 +79,41 @@ export class UserRunComponent implements OnInit {
     this.listProfil();
     this.listService();
 
+    this.adminIsConnect = this.isAdmin();
+
   }
+
+  isAdmin(): boolean {
+    return this.token.roles.indexOf(environment.ROLE_ADMIN) > -1;
+  }
+
 
   listProfil(): void {
     this.profilService.getList().subscribe(
       (data: Role[]) => {
         this.profilList = data;
+
         console.log('Profil List ==>', this.profilList);
+
+
+        /*if (typeof this.rolePersonne == 'undefined')
+          console.log('nest pas défini')
+
+        if (typeof this.rolePersonne != 'undefined')
+          console.log('est pas défini !!!')*/
+        if (this.adminIsConnect == false) {
+          for (let profil of this.profilList) {
+            if (profil.name == 'ROLE_PERSONNE') {
+              this.rolePersonne = new Role();
+              this.rolePersonne = profil;
+              this.perso.roles = [];
+              this.perso.roles.push(this.rolePersonne);
+              this.makePersonneForm(this.perso);
+            }
+          }
+        }
+        console.log(this.rolePersonne);
+
       },
       (error: HttpErrorResponse) => {
         console.log('error getList Profil ==>', error.message, ' ', error.status, ' ', error.statusText);
@@ -92,7 +131,7 @@ export class UserRunComponent implements OnInit {
       });
   }
 
-  makePersonneForm(personne: Personne){
+  makePersonneForm(personne: Personne) {
     this.validatePersonneForm = this.fb.group({
       id: [personne != null ? personne.id : null],
       nom: [personne != null ? personne.nom : null,
@@ -103,12 +142,14 @@ export class UserRunComponent implements OnInit {
         [Validators.required]],
       email: [personne != null ? personne.email : null,
         [Validators.required]],
-      roles: [personne != null ? personne.roles[0] : null,
+      /*roles: [personne != null ? personne.roles[0] : null,
+        [Validators.required]],*/
+      roles: [personne != null ? personne.roles : null,
         [Validators.required]],
       serviceB: [personne != null ? personne.serviceB : null,
         [Validators.required]],
-        username: [personne != null ? personne.username : null],
-        password: [personne != null ? personne.password : null],
+      username: [personne != null ? personne.username : null],
+      password: [personne != null ? personne.password : null],
     });
   }
 
@@ -134,11 +175,19 @@ export class UserRunComponent implements OnInit {
 
       const formData = this.validatePersonneForm.value;
 
-      let role = new Role();
+      /*let role = new Role();
       role = formData.roles;
 
       formData.roles = [];
-      formData.roles.push(role);
+      formData.roles.push(role);*/
+
+
+      /*let les_roles: Role[];
+      les_roles = [...formData.roles];
+      console.log(formData.roles);
+      console.log('les roles 01');
+      console.log(les_roles);*/
+
 
       if (formData.id == null) {
         this.personneService.createPersonne(formData).subscribe(
@@ -180,8 +229,7 @@ export class UserRunComponent implements OnInit {
           });
       }
 
-    }
-    else {
+    } else {
 
     }
   }
@@ -260,12 +308,12 @@ export class UserRunComponent implements OnInit {
     this.listOfDisplayData = this.personneList.filter((item: Personne) => item.serviceB.libelle.indexOf(this.searchValueService) !== -1);
   }
 
-  updateForm(data: Personne){
+  updateForm(data: Personne) {
     this.makePersonneForm(data);
     this.indexOfTab = 1;
   }
 
-  confirmMsgDelete(data: Magasin){
+  confirmMsgDelete(data: Magasin) {
     this.personneService.deletePersonne(data.id).subscribe(
       (data01: any) => {
         console.log('data du delete ==>', data01);
@@ -283,7 +331,7 @@ export class UserRunComponent implements OnInit {
     //this.nzMessageService.info('click confirm');
   }
 
-  listOfColumnHeadeer(){
+  listOfColumnHeadeer() {
     this.listOfColumn = [
       {
         title: 'Nom',

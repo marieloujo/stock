@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BehaviorService} from '../../services/common/behavior.service';
 import {DemandeProduitService} from '../../services/dashboard/demande-produit.service';
 import {DemandeProduit} from '../../models/demande-produit';
@@ -8,10 +8,9 @@ import {ProduitService} from '../../services/dashboard/produit.service';
 import {DemandeService} from '../../services/dashboard/demande.service';
 import {Produit} from '../../models/produit';
 import {Demande} from '../../models/demande';
-import { TokenService } from 'src/app/services/token/token.service';
-import { Token } from 'src/app/models/token.model';
+import {TokenService} from 'src/app/services/token/token.service';
+import {Token} from 'src/app/models/token.model';
 import {environment} from '../../../environments/environment';
-import {Magasin} from '../../models/magasin';
 import {Gamme} from '../../models/gamme';
 import {GammeService} from '../../services/dashboard/gamme.service';
 
@@ -55,7 +54,7 @@ export class AccueilComponent implements OnInit {
     private gammeService: GammeService,
   ) {
     this.token = this.tokenService.getAccessToken();
-   }
+  }
 
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Tableau de bord']);
@@ -68,11 +67,11 @@ export class AccueilComponent implements OnInit {
 
     this.livreur = this.canLivrer();
     this.validateur = this.canValider();
-    console.log(this.livreur+" "+this.validateur)
+    console.log(this.livreur + ' ' + this.validateur);
 
   }
 
-  getStatsOfDemande(){
+  getStatsOfDemande() {
 
     this.demandeService.getStatsDayWeekMonthYear().subscribe(
       (data: any) => {
@@ -83,7 +82,7 @@ export class AccueilComponent implements OnInit {
         this.statsCOunt.month = data[2];
         this.statsCOunt.year = data[3];
       }
-    )
+    );
 
   }
 
@@ -94,10 +93,10 @@ export class AccueilComponent implements OnInit {
 
   canLivrer(): boolean {
     return this.token.roles.indexOf(environment.ROLE_GESTIONNAIRE) > -1;
-}
+  }
 
 
-  validerDemande(demandeProduit: DemandeProduit){
+  validerDemande(demandeProduit: DemandeProduit) {
 
     demandeProduit.valider = true;
     demandeProduit.validateur = String(this.token.username);
@@ -119,7 +118,7 @@ export class AccueilComponent implements OnInit {
 
   }
 
-  livrerDemande(demandeProduit: DemandeProduit){
+  livrerDemande(demandeProduit: DemandeProduit) {
 
     demandeProduit.livrer = true;
     demandeProduit.gestionnaire = String(this.token.username);
@@ -165,13 +164,13 @@ export class AccueilComponent implements OnInit {
 
   }
 
-  listDemandeProduitDescCreatedDate(){
+  listDemandeProduitDescCreatedDate() {
     this.demandeProduitService.getListDescCreateDate().subscribe(
       (data: DemandeProduit[]) => {
         this.demandeProduitDescList = data;
         console.log('Demande Produit Desc Date ==>', this.demandeProduitDescList);
 
-        for (let dmdProd of this.demandeProduitDescList){
+        for (let dmdProd of this.demandeProduitDescList) {
 
           this.produitService.getProduitById(dmdProd.produit.id).subscribe(
             (dataProd: Produit) => {
@@ -185,7 +184,7 @@ export class AccueilComponent implements OnInit {
 
           this.demandeService.getDemandeById(dmdProd.demande.id).subscribe(
             (dataDem: Demande) => {
-              dmdProd.personne =  dataDem.personne;
+              dmdProd.personne = dataDem.personne;
             },
             (error: HttpErrorResponse) => {
               console.log('error get by id Produit ==>', error.message, ' ', error.status, ' ', error.statusText);
@@ -203,7 +202,7 @@ export class AccueilComponent implements OnInit {
       });
   }
 
-  listOfColumnHeader(){
+  listOfColumnHeader() {
     this.listOfColumn = [
       {
         title: 'Numero Série',
