@@ -1,10 +1,16 @@
 
 <nz-tabset [(nzSelectedIndex)]="indexOfTab" [nzSize]="'large'">
   <nz-tab [nzTitle]="'Liste des modeles '">
-    <nz-table #sortTable [nzData]="modeleList" nzTableLayout="fixed" [nzPageSize]="5">
+    <nz-table #sortTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzPageSize]="5">
       <thead>
       <tr>
-        <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{ column.title }}</th>
+        <th nzCustomFilter
+            *ngFor="let column of listOfColumn" [nzSortFn]="column.sortFn">{{ column.title }}
+          <nz-filter-trigger [(nzVisible)]="visible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
+            <i nz-icon nzType="search"></i>
+          </nz-filter-trigger>
+
+        </th>
         <th *ngIf="is_admin"> Actions </th>
       </tr>
       </thead>
@@ -31,6 +37,19 @@
       </tbody>
     </nz-table>
   </nz-tab>
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Rechercher modele" [(ngModel)]="searchValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="reset()"> Annuler </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
   <nz-tab [nzTitle]="'Nouveau modele' " *ngIf="is_admin">
 
     <form [formGroup]="validateMagasinForm" nz-form>

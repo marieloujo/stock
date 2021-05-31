@@ -40,7 +40,7 @@
   <nz-dropdown-menu #menu="nzDropdownMenu">
     <div class="ant-table-filter-dropdown">
       <div class="search-box">
-        <input type="text" nz-input placeholder="chercher un magasin" [(ngModel)]="searchValue" />
+        <input type="text" nz-input placeholder="Rechercher un magasin" [(ngModel)]="searchValue" />
         <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
           Chercher
         </button>
@@ -66,16 +66,18 @@
         <div nz-col nzSpan="24">
           <nz-space>
             <nz-space-item>
+              <button (click)="submitMagasinForm()" [disabled]="validateMagasinForm.invalid" nz-button
+                      nzType="primary" (keypress)="$event.keyCode == 13"><i nz-icon nzType="check"></i>
+                Enregistrer
+              </button>
+            </nz-space-item>
+
+            <nz-space-item>
               <button (click)="resetMagasinForm($event)" nz-button nzType="default"><i nz-icon nzType="close"></i>
                 Annuler
               </button>
             </nz-space-item>
-            <nz-space-item>
-              <button (click)="submitMagasinForm()" [disabled]="validateMagasinForm.invalid" nz-button
-                      nzType="primary"><i nz-icon nzType="check"></i>
-                Enregistrer
-              </button>
-            </nz-space-item>
+
           </nz-space>
         </div>
 

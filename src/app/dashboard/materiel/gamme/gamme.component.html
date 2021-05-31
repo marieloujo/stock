@@ -1,10 +1,18 @@
 
 <nz-tabset [(nzSelectedIndex)]="indexOfTab" [nzSize]="'large'">
   <nz-tab [nzTitle]="'Liste des équipements '">
-    <nz-table #sortTable [nzData]="gammeList" nzTableLayout="fixed" [nzPageSize]="5">
+    <nz-table #sortTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzPageSize]="5">
       <thead>
       <tr>
-        <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{ column.title }}</th>
+        <th nzCustomFilter
+            *ngFor="let column of listOfColumn" [nzSortFn]="column.sortFn">{{ column.title }}
+          <nz-filter-trigger *ngIf="column.title =='Libellé' " [(nzVisible)]="visible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
+            <i nz-icon nzType="search"></i>
+          </nz-filter-trigger>
+          <nz-filter-trigger *ngIf="column.title =='Stock minimal' " [(nzVisible)]="visibleSM" [nzActive]="searchValueSM.length > 0" [nzDropdownMenu]="menuSM">
+            <i nz-icon nzType="search"></i>
+          </nz-filter-trigger>
+        </th>
         <th *ngIf="is_admin"> Actions </th>
       </tr>
       </thead>
@@ -33,6 +41,34 @@
       </tbody>
     </nz-table>
   </nz-tab>
+
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Rechercher equipement" [(ngModel)]="searchValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="reset()"> Annuler </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuSM="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Rechercher stock min" [(ngModel)]="searchValueSM" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchSM()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetSM()"> Annuler </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+
+
   <nz-tab [nzTitle]="'Nouveau équipement' " *ngIf="is_admin">
 
     <form [formGroup]="validateMagasinForm" nz-form>
@@ -50,7 +86,7 @@
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Stock minimal</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input formControlName="stockMin" nz-input placeholder="saisir le stockMin" [type]="'number'" [min]="1"/>
+              <input formControlName="stockMin" nz-input placeholder="saisir le stock minimal d'alerte" [type]="'number'" [min]="1"/>
             </nz-form-control>
           </nz-form-item>
         </div>

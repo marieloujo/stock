@@ -17,6 +17,9 @@ import {DemandeProduitService} from '../../services/dashboard/demande-produit.se
 import { Router } from '@angular/router';
 import {Etat} from '../../models/etat';
 import {EtatService} from '../../services/dashboard/etat.service';
+import {Gamme} from '../../models/gamme';
+import {EtatProduit} from '../../models/etat-produit';
+import {EtatProduitService} from '../../services/dashboard/etat-produit.service';
 
 @Component({
   selector: 'app-nouvelle-demande',
@@ -37,6 +40,8 @@ export class NouvelleDemandeComponent implements OnInit {
   produitChoice: Produit;
   personneDemande: Personne;
   mouvementDemande: any;
+  //etatSelectedValue: Etat;
+  etatSelectedValue;
 
   modele: string;
   gamme: string;
@@ -48,6 +53,11 @@ export class NouvelleDemandeComponent implements OnInit {
 
   countNew: number = 0;
 
+  showFieldEtat: boolean = false;
+
+  //compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.value === o2.value : o1 === o2);
+  compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
+
   constructor(
     private behaviorService: BehaviorService,
     private produitService: ProduitService,
@@ -58,6 +68,7 @@ export class NouvelleDemandeComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private etatService: EtatService,
+    private etatProduitService: EtatProduitService,
   ) {
   }
 
@@ -147,6 +158,7 @@ export class NouvelleDemandeComponent implements OnInit {
       livrer: [demandeProduit != null ? demandeProduit.livrer : null],
       //mouvement: [demandeProduit != null ? demandeProduit.demande.mouvement : null, {value: this.countNew, disabled: true}],
       mouvement: [demandeProduit != null ? demandeProduit.demande.mouvement : null],
+      etat: [demandeProduit != null ? demandeProduit.etat : null],
     });
   }
 
@@ -158,6 +170,9 @@ export class NouvelleDemandeComponent implements OnInit {
       this.validateNewDemandeForm.controls[key].updateValueAndValidity();
     }
     this.makeDemandeForm(null);
+    this.marque = '';
+    this.gamme = '';
+    this.modele = '';
     this.indexOfTab = 0;
     //this.pageIndex = 1;
   }
@@ -182,9 +197,9 @@ export class NouvelleDemandeComponent implements OnInit {
 
     const produitToChoice = this.validateNewDemandeForm.get('produit').value;
 
-    this.marque = produitToChoice.marque.libelle;
-    this.gamme = produitToChoice.gamme.libelle;
-    this.modele = produitToChoice.modele.libelle;
+    this.marque = produitToChoice?.marque.libelle;
+    this.gamme = produitToChoice?.gamme.libelle;
+    this.modele = produitToChoice?.modele.libelle;
 
     console.log(this.marque);
     console.log(this.gamme);
@@ -192,6 +207,17 @@ export class NouvelleDemandeComponent implements OnInit {
 
     console.log(produitToChoice);
 
+    console.log(this.etatSelectedValue);
+
+  }
+
+  loadStateFieldEtat(event: any){
+    /*const mouvementChoice = this.validateNewDemandeForm.get('mouvement').value;
+    console.log(mouvementChoice);*/
+    console.log(event);
+    let mouv = this.mouvementList.find(mv => mv.value == event);
+    if (event == 'ENTRER') this.showFieldEtat = true ;
+    else this.showFieldEtat = false;
   }
 
   validerProduit() {
@@ -222,9 +248,18 @@ export class NouvelleDemandeComponent implements OnInit {
         this.gamme = '';
         this.modele = '';
 
+        this.countNew++;
       }
+
+      if (this.countNew == 1 || this.demandeProduitList.length == 1){
+        let demandeProduitFixed: DemandeProduit = new DemandeProduit();
+        this.validateNewDemandeForm.get('personne').setValue(this.personneDemande);
+        this.validateNewDemandeForm.get('mouvement').setValue(this.mouvementDemande);
+        //this.makeDemandeForm(null);
+      }
+
     }
-    this.countNew++;
+
   }
 
   goToListDemandeProduit() {
@@ -234,6 +269,26 @@ export class NouvelleDemandeComponent implements OnInit {
   addNewProduit() {
     this.indexOfTab = 0;
   }
+
+
+  confirmMsgDelete(data: any) {
+
+    console.log('data dans confirm suppression ');
+    console.log(data);
+    console.log(this.demandeProduitList.length);
+    this.demandeProduitList = this.demandeProduitList.filter(dp => dp !== data);
+    this.demandeProduitList = [...this.demandeProduitList];
+    console.log(this.demandeProduitList.length);
+    this.countNew -= 1;
+    this.makeDemandeForm(null);
+
+
+  }
+
+  cancelMsgDelete(): void {
+    //this.nzMessageService.info('click confirm');
+  }
+
 
   faireValiderProduit(){
 
@@ -277,6 +332,26 @@ export class NouvelleDemandeComponent implements OnInit {
               }
             );
 
+            if (this.showFieldEtat == true){
+              if (dp.etat != null || dp.etat != undefined){
+
+                let newEtatProduit: EtatProduit = new EtatProduit();
+                newEtatProduit.actuel = false;
+                newEtatProduit.etat = dp.etat;
+                newEtatProduit.produit = dp.produit;
+                newEtatProduit.dateHeure = new Date();
+
+                this.etatProduitService.createEtatProduit(newEtatProduit).subscribe(
+                  (data: any) => {
+                    console.log('Enregistrement etat produit ok');
+                    console.log(data);
+                  },
+                  (error: HttpErrorResponse) => {
+                    console.log('Enregistrement de etat produit non ok');
+                  });
+              }
+            }
+
           }
 
           this.countNew = 0;
@@ -284,6 +359,8 @@ export class NouvelleDemandeComponent implements OnInit {
           this.router.navigate(['/dashboard']).then(() => {
             window.location.reload();
           });
+          this.makeDemandeForm(null);
+          this.showFieldEtat = false;
 
         },
         (error: HttpErrorResponse) => {

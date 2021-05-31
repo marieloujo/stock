@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BehaviorService} from '../../../services/common/behavior.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Magasin} from '../../../models/magasin';
-import {MagasinService} from '../../../services/dashboard/magasin.service';
 import {GammeService} from '../../../services/dashboard/gamme.service';
 import {Gamme} from '../../../models/gamme';
 import {HttpErrorResponse} from '@angular/common/http';
-import { TokenService } from 'src/app/services/token/token.service';
-import { Token } from 'src/app/models/token.model';
+import {TokenService} from 'src/app/services/token/token.service';
+import {Token} from 'src/app/models/token.model';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -20,6 +18,13 @@ export class GammeComponent implements OnInit {
   validateMagasinForm!: FormGroup;
 
   gammeList: Gamme[];
+
+  searchValue = '';
+  visible = false;
+  searchValueSM = '';
+  visibleSM = false;
+  listOfDisplayData;
+  pageIndex;
 
   indexOfTab: number;
 
@@ -35,7 +40,9 @@ export class GammeComponent implements OnInit {
     private fb: FormBuilder,
     private gammeService: GammeService,
     private tokenService: TokenService
-  ) { this.token = this.tokenService.getAccessToken(); }
+  ) {
+    this.token = this.tokenService.getAccessToken();
+  }
 
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Matériel', 'Equipement']);
@@ -46,16 +53,16 @@ export class GammeComponent implements OnInit {
 
     this.listOfColumnHeadeer();
 
-        this.is_admin = this.canWrite();
-        console.log(this.is_admin);
+    this.is_admin = this.canWrite();
+    console.log(this.is_admin);
 
-    }
+  }
 
-    canWrite(): boolean {
+  canWrite(): boolean {
     return this.token.roles.indexOf(environment.ROLE_ADMIN) > -1;
-    }
+  }
 
-  makeGammeForm(gamme: Gamme){
+  makeGammeForm(gamme: Gamme) {
     this.validateMagasinForm = this.fb.group({
       id: [gamme != null ? gamme.id : null],
       libelle: [gamme != null ? gamme.libelle : null,
@@ -78,7 +85,7 @@ export class GammeComponent implements OnInit {
     this.indexOfTab = 0;
   }
 
-  updateForm(data: Gamme){
+  updateForm(data: Gamme) {
 
     this.makeGammeForm(data);
 
@@ -89,56 +96,37 @@ export class GammeComponent implements OnInit {
   list(): void {
     this.gammeService.getList().subscribe(
       (data: any) => {
-        this.gammeList = data;
-        console.log('MagasinList ==>', this.gammeList);
+        this.gammeList = [...data];
+        console.log('Gamme List ==>', this.gammeList);
+        this.listOfDisplayData = [...this.gammeList];
       },
       (error: HttpErrorResponse) => {
-        console.log('error getList Magasin ==>', error.message, ' ', error.status, ' ', error.statusText);
+        console.log('error getList Gamme ==>', error.message, ' ', error.status, ' ', error.statusText);
       });
   }
 
-
-
-
-
-  listOfColumnHeadeer(){
+  listOfColumnHeadeer() {
     this.listOfColumn = [
-      /*{
-        title: 'Name',
-        compare: null,
-        priority: false
-      },*/
       {
         title: 'Libellé',
         compare: null,
-        priority: false
+        sortFn: (a: Gamme, b: Gamme) => a.libelle.localeCompare(b.libelle),
       },
       {
         title: 'Description',
         compare: null,
-        priority: false
+        sortFn: null,
       },
       {
         title: 'Stock minimal',
-        compare: (a: Gamme, b: Gamme) => a.stockMin - b.stockMin,
-        priority: 3
+        compare: null,
+        sortFn: (a: Gamme, b: Gamme) => a.stockMin - b.stockMin,
+
       },
-      /*{
-        title: 'Math Score',
-        compare: (a: DataItem, b: DataItem) => a.math - b.math,
-        priority: 2
-      },
-      {
-        title: 'English Score',
-        compare: (a: DataItem, b: DataItem) => a.english - b.english,
-        priority: 1
-      }*/
     ];
   }
 
-
-  confirmMsgDelete(data: Gamme){
-
+  confirmMsgDelete(data: Gamme) {
     this.gammeService.deleteGamme(data.id).subscribe(
       (data01: any) => {
         console.log('data du delete ==>', data01);
@@ -152,11 +140,29 @@ export class GammeComponent implements OnInit {
     );
   }
 
-
   cancelMsgDelete(): void {
     //this.nzMessageService.info('click confirm');
   }
 
+  reset(): void {
+    this.searchValue = '';
+    this.search();
+  }
+
+  search(): void {
+    this.visible = false;
+    this.listOfDisplayData = this.gammeList.filter((item: Gamme) => item.libelle.indexOf(this.searchValue) !== -1);
+  }
+
+  resetSM(): void {
+    this.searchValueSM = '';
+    this.searchSM();
+  }
+
+  searchSM(): void {
+    this.visibleSM = false;
+    this.listOfDisplayData = this.gammeList.filter((item: Gamme) => item.stockMin.toString().indexOf(this.searchValueSM) !== -1);
+  }
 
   submitGameForm(): void {
     for (const i in this.validateMagasinForm.controls) {
@@ -172,6 +178,7 @@ export class GammeComponent implements OnInit {
           (data: any) => {
             this.gammeList.unshift(data);
             this.gammeList = [...this.gammeList];
+            this.listOfDisplayData = [...this.gammeList];
             this.makeGammeForm(null);
 
             console.log('Enregistrement ok');
@@ -188,6 +195,7 @@ export class GammeComponent implements OnInit {
           (data: Gamme) => {
             this.gammeList[i] = data;
             this.gammeList = [...this.gammeList];
+            this.listOfDisplayData = [...this.gammeList];
             this.makeGammeForm(null);
 
             console.log('Update ok');
@@ -199,8 +207,7 @@ export class GammeComponent implements OnInit {
           });
       }
 
-    }
-    else {
+    } else {
 
     }
 

@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BehaviorService} from '../../../services/common/behavior.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Magasin} from '../../../models/magasin';
 import {MarqueService} from '../../../services/dashboard/marque.service';
 import {ProduitService} from '../../../services/dashboard/produit.service';
 import {Produit} from '../../../models/produit';
-import { MagasinService } from 'src/app/services/dashboard/magasin.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import {MagasinService} from 'src/app/services/dashboard/magasin.service';
+import {HttpErrorResponse} from '@angular/common/http';
 import {Gamme} from '../../../models/gamme';
 import {Marque} from '../../../models/marque';
 import {Modele} from '../../../models/modele';
@@ -18,8 +18,8 @@ import {Etat} from '../../../models/etat';
 import {MagasinProduitService} from '../../../services/dashboard/magasin-produit.service';
 import {EtatProduitService} from '../../../services/dashboard/etat-produit.service';
 import {EtatProduit} from '../../../models/etat-produit';
-import { TokenService } from 'src/app/services/token/token.service';
-import { Token } from 'src/app/models/token.model';
+import {TokenService} from 'src/app/services/token/token.service';
+import {Token} from 'src/app/models/token.model';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -41,6 +41,7 @@ export class ProduitComponent implements OnInit {
   etatList: Etat[];
 
   indexOfTab: number;
+  pageIndex;
 
   listOfColumn: any = [];
   isMagasinSelect: boolean = false;
@@ -70,12 +71,16 @@ export class ProduitComponent implements OnInit {
     private magasinProduitService: MagasinProduitService,
     private etatProduitService: EtatProduitService,
     private tokenService: TokenService
-  ) { this.token = this.tokenService.getAccessToken(); }
+  ) {
+    this.token = this.tokenService.getAccessToken();
+  }
+
+  compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
   ngOnInit(): void {
     this.behaviorService.setBreadcrumbItems(['Accueil', 'Matériel', 'Produit']);
 
-    this.makeProduitForm(null, null, null);
+    this.makeProduitForm(null);
 
     this.listOfColumnHeader();
     this.listMagasin();
@@ -85,22 +90,23 @@ export class ProduitComponent implements OnInit {
     this.list();
     this.listEtat();
 
-    this.getEtatByCode("NEW");
+    this.getEtatByCode('NEW');
 
     this.is_admin = this.canWrite();
 
-}
+  }
 
-canWrite(): boolean {
-  return this.token.roles.indexOf(environment.ROLE_ADMIN) > -1;
-}
+  canWrite(): boolean {
+    return this.token.roles.indexOf(environment.ROLE_ADMIN) > -1;
+  }
 
-  loadMagasinProduit(){
+  loadMagasinProduit() {
     console.log('Le magasin');
     console.log(this.magasinChoice);
   }
 
-  makeProduitForm(produit: Produit, magasinProduit: MagasinProduit,  etatProduit: EtatProduit){
+  /*makeProduitForm(produit: Produit, magasinProduit: MagasinProduit, etatProduit: EtatProduit) {*/
+  makeProduitForm(produit: Produit) {
     this.validateProduitForm = this.fb.group({
       id: [produit != null ? produit.id : null],
       numSerie: [produit != null ? produit.numSerie : null,
@@ -111,12 +117,12 @@ canWrite(): boolean {
         [Validators.required]],
       gamme: [produit != null ? produit.gamme : null,
         [Validators.required]],
-      etat: [etatProduit != null ? etatProduit.etat : null,
+      etat: [produit != null ? produit.etat : null,
         [Validators.required]],
       description: [produit != null ? produit.description : null],
-      magazin: [magasinProduit != null ? magasinProduit.magazin : null,
+      magazin: [produit != null ? produit.magasin : null,
         [Validators.required]],
-      idMP: [magasinProduit != null ? magasinProduit.id : null],
+      /*idMP: [magasinProduit != null ? magasinProduit.id : null],*/
     });
   }
 
@@ -140,7 +146,7 @@ canWrite(): boolean {
       this.validateProduitForm.controls[key].markAsPristine();
       this.validateProduitForm.controls[key].updateValueAndValidity();
     }
-    this.makeProduitForm(null, null, null);
+    this.makeProduitForm(null);
     this.indexOfTab = 0;
     //this.pageIndex = 1;
   }
@@ -170,14 +176,12 @@ canWrite(): boolean {
         console.log('LE NEW PRODUIT');
         console.log(newProduit);
 
-
         this.produitService.createProduit(newProduit).subscribe(
           (data: any) => {
             this.produitList.unshift(data);
             //this.magasinList.push(data)
             this.produitList = [...this.produitList];
             this.listOfDisplayData = [...this.produitList];
-
 
             // Enregistrement Magasin Produit
 
@@ -192,11 +196,15 @@ canWrite(): boolean {
               (data: any) => {
                 console.log('Enregistrement magasin produit ok');
                 console.log(data);
+
+                //chargement liste Produit pour affichage
+                this.list();
+
               },
               (error: HttpErrorResponse) => {
-              console.log('Enregistrement de magasin produit non ok');
+                console.log('Enregistrement de magasin produit non ok');
 
-            });
+              });
 
             // Enregistrement Etat Produit
 
@@ -206,15 +214,19 @@ canWrite(): boolean {
             newEtatProduit.etat = formData.etat;
 
             newEtatProduit.produit = data;
+            newEtatProduit.dateHeure = new Date();
 
             this.etatProduitService.createEtatProduit(newEtatProduit).subscribe(
               (data: any) => {
                 console.log('Enregistrement etat produit ok');
                 console.log(data);
+
+                //chargement liste Produit pour affichage
+                this.list();
+
               },
               (error: HttpErrorResponse) => {
                 console.log('Enregistrement de etat produit non ok');
-
               });
 
             //Modification de la gamme (equipement) concerné
@@ -237,15 +249,14 @@ canWrite(): boolean {
 
                 console.log('Recherche By Id de Gamme ok');
 
-
               },
               (error: HttpErrorResponse) => {
                 console.log('Recherche By Id de Gamme non ok');
               });
 
-
-            this.makeProduitForm(null, null, null);
+            this.makeProduitForm(null);
             console.log('Enregistrement produit ok');
+            //chargement liste Produit pour affichage
             this.list();
             this.indexOfTab = 0;
             //this.pageIndex = 1;
@@ -255,41 +266,104 @@ canWrite(): boolean {
             console.log('Enregistrement produit non ok');
 
           });
-      } /*else {
-        const i = this.magasinList.findIndex(p => p.id == formData.id);
-        this.magasinService.updateMagasin(formData).subscribe(
-          (data: Magasin) => {
-            console.log(this.magasinList);
-            console.log(data);
-            this.magasinList[i] = data;
-            this.magasinList = [...this.magasinList];
-            this.listOfDisplayData = [...this.magasinList];
-            console.log(this.magasinList);
-            this.makeProduitForm(null, null);
+      } else {
 
-            console.log('Update ok');
+        const i = this.magasinList.findIndex(p => p.id == formData.id);
+        console.log(i);
+
+        let newUpdateProduit: Produit = new Produit();
+        newUpdateProduit.id = formData.id;
+        newUpdateProduit.numSerie = formData.numSerie;
+        newUpdateProduit.marque = formData.marque;
+        newUpdateProduit.modele = formData.modele;
+        newUpdateProduit.gamme = formData.gamme;
+        newUpdateProduit.description = formData.description;
+        console.log('LE NEW UPDATE PRODUIT');
+        console.log(newUpdateProduit);
+
+        this.produitService.updateProduit(newUpdateProduit).subscribe(
+          (data: Produit) => {
+            console.log('The data produit update okok');
+            console.log(data);
+            this.produitList[i] = data;
+            this.produitList = [...this.produitList];
+            this.listOfDisplayData = [...this.produitList];
+            console.log(this.produitList);
+
+            let newUpdateEtatProduit: EtatProduit = new EtatProduit();
+            let newUpdateEtatProd = data.etatProduits.find(ep => ep.actuel == true);
+            newUpdateEtatProduit.etat = formData.etat;
+            newUpdateEtatProduit.produit = data;
+            newUpdateEtatProduit.dateHeure = new Date();
+            newUpdateEtatProduit.actuel = true;
+            newUpdateEtatProduit.id = newUpdateEtatProd.id;
+
+            console.log('le new Update de EtatProduit');
+            console.log(newUpdateEtatProduit);
+            console.log(newUpdateEtatProd);
+            this.etatProduitService.updateEtatProduit(newUpdateEtatProduit).subscribe(
+              (dataEP: EtatProduit) => {
+                console.log('Update ok pour etatProduit ');
+                console.log(dataEP);
+
+                //chargement liste Produit pour affichage
+                this.list();
+
+              }, (error: HttpErrorResponse) => {
+                console.log('Update etatProduit non ok ' + error.status + '  ' + error.statusText + '  ' + error.message);
+              }
+            );
+
+            let newUpdateMagasinProduit: MagasinProduit = new MagasinProduit();
+            let newUpdateMagProd = data.magazinProduits.find(mp => mp.actuel == true);
+            newUpdateMagasinProduit.magazin = formData.magazin;
+            newUpdateMagasinProduit.produit = data;
+            newUpdateMagasinProduit.dateHeure = new Date();
+            newUpdateMagasinProduit.actuel = true;
+            newUpdateMagasinProduit.id = newUpdateMagProd.id;
+
+            console.log('le new Update de MagasinPoduit');
+            console.log(newUpdateMagasinProduit);
+            console.log(newUpdateMagProd);
+            this.magasinProduitService.updateMagasinProduit(newUpdateMagasinProduit).subscribe(
+              (dataMP: MagasinProduit) => {
+                console.log('Update ok pour MagasinProduit ');
+                console.log(dataMP);
+
+                //chargement liste Produit pour affichage
+                this.list();
+
+              }, (error: HttpErrorResponse) => {
+                console.log('Update MagasinProduit non ok ' + error.status + '  ' + error.statusText + '  ' + error.message);
+              }
+            );
+
+            this.makeProduitForm(null);
+            //chargement liste Produit pour affichage
+            this.list();
             this.indexOfTab = 0;
-            //this.pageIndex = 1;
+
+            console.log('Update Produit ok');
 
           },
           (error: HttpErrorResponse) => {
-            console.log('Update non ok');
+            console.log('Update Produit non ok ' + error.status + '  ' + error.statusText + '  ' + error.message);
           });
-      }*/
-
-    }
-    else {
+      }
+    } else {
       console.log('FormData -- Formulaire non valide');
     }
 
   }
 
-  /*updateForm(data: Produit){
+  updateForm(data: Produit) {
+    console.log('la data de update');
+    console.log(data);
 
     this.makeProduitForm(data);
 
     this.indexOfTab = 1;
-  }*/
+  }
 
 
   list(): void {
@@ -298,24 +372,24 @@ canWrite(): boolean {
         this.produitList = [...data];
         console.log('Produit List ==>', this.produitList);
 
-        for (let prod of this.produitList){
+        for (let prod of this.produitList) {
           console.log('le produit ==> ');
           console.log(prod);
           let etatProd: EtatProduit = prod.etatProduits.find(p => p.actuel == true);
           console.log(etatProd);
 
-          this.etatProduitService.getEtatProduitById(etatProd.id).subscribe(
+          this.etatProduitService.getEtatProduitById(etatProd?.id).subscribe(
             (dataEtatProd: EtatProduit) => {
               console.log('DataEtatProd');
               console.log(dataEtatProd.etat.libelle);
-              prod.etat = dataEtatProd.etat
+              prod.etat = dataEtatProd.etat;
             },
             (error: HttpErrorResponse) => {
               console.log('error get by id etatProduit ==>', error.message, ' ', error.status, ' ', error.statusText);
             });
 
           let magProd: MagasinProduit = prod.magazinProduits.find(m => m.actuel == true);
-          this.magasinProduitService.getMagasinProduitById(magProd.id).subscribe(
+          this.magasinProduitService.getMagasinProduitById(magProd?.id).subscribe(
             (dataMagProd: MagasinProduit) => {
               console.log('DataMagProd');
               console.log(dataMagProd.magazin.libelle);
@@ -420,16 +494,16 @@ canWrite(): boolean {
     this.listOfDisplayData = this.produitList.filter((item: Produit) => item.marque.libelle.indexOf(this.searchValueMarque) !== -1);
   }
 
-  confirmMsgDelete(data: Produit){
-    this.magasinService.deleteMagasin(data.id).subscribe(
+  confirmMsgDelete(data: Produit) {
+    this.produitService.deleteProduit(data.id).subscribe(
       (data01: any) => {
-        console.log('data du delete ==>', data01);
+        console.log('data du delete Produit==>', data01);
         //this.indexOfTab = 0;
         //this.nzMessageService.info('click cancel');
         this.list();
       },
       (error: HttpErrorResponse) => {
-        console.log('error deleteMagasin ==>', error.message, ' ', error.status, ' ', error.statusText);
+        console.log('error delete Produit  ==>', error.message, ' ', error.status, ' ', error.statusText);
       }
     );
   }
@@ -438,7 +512,7 @@ canWrite(): boolean {
     //this.nzMessageService.info('click confirm');
   }
 
-  listOfColumnHeader(){
+  listOfColumnHeader() {
     this.listOfColumn = [
       {
         title: 'Numero Série',

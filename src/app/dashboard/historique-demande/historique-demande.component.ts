@@ -140,6 +140,9 @@ export class HistoriqueDemandeComponent implements OnInit {
   dateToShow: string = '';
   timeToShow: string = '';
 
+  startDate: Date;
+  endDate: Date;
+
 
   constructor(
     private behaviorService: BehaviorService,
@@ -232,22 +235,22 @@ export class HistoriqueDemandeComponent implements OnInit {
       {
         title: 'Equipement',
         compare: null,
-        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.gamme.libelle.localeCompare(b.produit.gamme.libelle),
+        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.gamme.libelle.localeCompare(b.gamme.libelle),
       },
       {
         title: 'Marque',
         compare: null,
-        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.marque.libelle.localeCompare(b.produit.marque.libelle),
+        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.marque.libelle.localeCompare(b.marque.libelle),
       },
       {
         title: 'Modele',
         compare: null,
-        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.produit.modele.libelle.localeCompare(b.produit.modele.libelle),
+        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.modele.libelle.localeCompare(b.modele.libelle),
       },
       {
         title: 'Personne concernée',
         compare: null,
-        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.demande.personne.nom.localeCompare(b.demande.personne.nom),
+        sortFn: (a: DemandeProduit, b: DemandeProduit) => a.personne.nom.localeCompare(b.personne.nom),
       },
       /*{
         title: 'Math Score',
@@ -272,20 +275,19 @@ export class HistoriqueDemandeComponent implements OnInit {
     console.log(data.validateur);
     console.log(data.gestionnaire);
 
-    if (data.validateur == null){
+    if (data.validateur == null) {
       this.validateurCourant = 'Aucun validateur pour cette demande';
       this.gestionnaireCourant = 'Aucun gestionnaire pour cette demande';
-    }
-    else {
-      if (data.gestionnaire !=null){
+    } else {
+      if (data.gestionnaire != null) {
 
         this.personneService.getPersonneByUsername02(data.validateur, data.gestionnaire).subscribe(
           (dataPers: Personne[]) => {
 
             this.personneByUsernameList = [...dataPers];
 
-            this.validateurCourant = this.personneByUsernameList[0].nom + ' '+this.personneByUsernameList[0].prenom;
-            this.gestionnaireCourant = this.personneByUsernameList[1].nom + ' '+this.personneByUsernameList[1].prenom;
+            this.validateurCourant = this.personneByUsernameList[0].nom + ' ' + this.personneByUsernameList[0].prenom;
+            this.gestionnaireCourant = this.personneByUsernameList[1].nom + ' ' + this.personneByUsernameList[1].prenom;
 
             /*console.log('taille de personneListByUsername ==> '+ this.personneByUsernameList.length);
 
@@ -296,12 +298,11 @@ export class HistoriqueDemandeComponent implements OnInit {
           (error: HttpErrorResponse) => {
             console.log('error get personne List  by username demande produit ==>', error.message, ' ', error.status, ' ', error.statusText);
           });
-      }
-      else{
+      } else {
         this.personneService.getPersonneByUsername01(data.validateur).subscribe(
           (dataPers: Personne) => {
             let persC: Personne = dataPers;
-            this.validateurCourant = persC.nom + ' '+persC.prenom;
+            this.validateurCourant = persC.nom + ' ' + persC.prenom;
             this.gestionnaireCourant = 'Aucun gestionnaire pour cette demande';
 
           },
@@ -310,8 +311,6 @@ export class HistoriqueDemandeComponent implements OnInit {
           });
       }
     }
-
-
 
 
     this.demandeProduitService.getDemandeProduitCreatedBy(data.id).subscribe(
@@ -406,6 +405,39 @@ export class HistoriqueDemandeComponent implements OnInit {
   searchDemandeur(): void {
     this.visibleDemandeur = false;
     this.listOfDisplayData = this.demandeProduitList.filter((item: DemandeProduit) => item.personne.nom.indexOf(this.searchValueDemandeur) !== -1 || item.personne.prenom.indexOf(this.searchValueDemandeur) !== -1);
+  }
+
+  rechercherParDate(){
+
+    console.log('start Day')
+    console.log(this.startDate)
+
+    console.log('end Day')
+    console.log(this.endDate)
+
+    let de = new Date(this.startDate);
+    let de2 = new Date(this.endDate);
+    let sd: string = de.getFullYear()+"-"+(de.getMonth()+1)+"-"+de.getDate();
+    let ed: string = de2.getFullYear()+"-"+(de2.getMonth()+1)+"-"+de2.getDate();
+
+    let ddd = new Date(sd);
+    let ddd2 = new Date(ed);
+    console.log(ddd);
+    console.log(ddd2);
+    console.log(sd);
+    console.log(ed);
+    //console.log(de.getUTCMonth()+1);
+
+    this.demandeProduitService.getDemandeProduitBetweenCreatedDate(this.startDate, this.endDate).subscribe(
+      (data: DemandeProduit[]) => {
+        console.log('Dans le get demandeProduit between created date');
+        console.log(data);
+      },
+      (error: HttpErrorResponse) => {
+        console.log('Error in Get demandeProduit Between createdDate  non ok ' + error.status + '  ' + error.statusText + '  ' + error.message);
+      }
+    );
+
   }
 
 }

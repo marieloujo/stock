@@ -4,6 +4,7 @@ import {Marque} from './marque';
 import {Modele} from './modele';
 import {Gamme} from './gamme';
 import {Personne} from './personne';
+import {Etat} from './etat';
 
 export class DemandeProduit {
 
@@ -26,6 +27,7 @@ export class DemandeProduit {
   modele: Modele;
   gamme: Gamme;
   personne: Personne;
+  etat: Etat;
 
 
 }

@@ -6,7 +6,38 @@
     <a [routerLink]="['/dashboard/nouvelle-demande']"> Faire une nouvelle demande </a>
   </button>
 
-  <nz-table #sortTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzPageSize]="5">
+  <div nz-col nzSpan="8">
+
+    <label>
+      Date début:
+      <input [(ngModel)]="startDate" type="date" name="bday">
+    </label>
+
+    <!--<nz-input-group nzCompact>
+      <input type="text" nz-input [ngModel]="'input content'" style="width:50%;" />
+      <nz-date-picker></nz-date-picker>
+    </nz-input-group>-->
+
+  </div>
+  <div nz-col nzSpan="8">
+
+    <label>
+      Date fin:
+      <input [(ngModel)]="endDate" type="date" name="bday">
+    </label>
+
+    <!--<nz-input-group nzCompact>
+      <input type="text" nz-input [ngModel]="'input content'" style="width:50%;" />
+      <nz-date-picker></nz-date-picker>
+    </nz-input-group>-->
+
+  </div>
+
+  <div nz-col nzSpan="8">
+    <button (click)="rechercherParDate()" nz-button nzType="default">Rechercher par période</button>
+  </div>
+
+  <nz-table #sortTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzPageSize]="5" style="margin-top: 1.5em">
     <thead>
     <tr>
       <th nzCustomFilter *ngFor="let column of listOfColumn" [nzSortFn]="column.sortFn">
@@ -28,7 +59,7 @@
           <i nz-icon nzType="search"></i>
         </nz-filter-trigger>
 
-        <nz-filter-trigger *ngIf="column.title == 'Demandeur'" [(nzVisible)]="visibleDemandeur" [nzActive]="searchValueDemandeur.length > 0" [nzDropdownMenu]="menuDemandeur">
+        <nz-filter-trigger *ngIf="column.title == 'Personne concernée'" [(nzVisible)]="visibleDemandeur" [nzActive]="searchValueDemandeur.length > 0" [nzDropdownMenu]="menuDemandeur">
           <i nz-icon nzType="search"></i>
         </nz-filter-trigger>
 
@@ -54,6 +85,68 @@
     </tr>
     </tbody>
   </nz-table>
+
+  <nz-dropdown-menu #menuNumero="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Rechercher equipement" [(ngModel)]="searchValueNumero" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchNumero()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetNumero()"> Annuler </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuEquipement="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Rechercher equipement" [(ngModel)]="searchValueEquipement" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchEquipement()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetEquipement()"> Annuler </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuMarque="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Rechercher equipement" [(ngModel)]="searchValueMarque" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchMarque()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetMarque()"> Annuler </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuModele="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Rechercher equipement" [(ngModel)]="searchValueModele" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchModele()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetModele()"> Annuler </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuDemandeur="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Rechercher equipement" [(ngModel)]="searchValueDemandeur" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchDemandeur()" class="search-button">
+          Chercher
+        </button>
+        <button nz-button nzSize="small" (click)="resetDemandeur()"> Annuler </button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+
 </div>
 
 

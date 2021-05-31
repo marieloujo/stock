@@ -71,6 +71,7 @@ export class MagasinComponent implements OnInit {
 
   resetMagasinForm(e: MouseEvent): void {
     e.preventDefault();
+    console.log(e)
     this.validateMagasinForm.reset();
     for (const key in this.validateMagasinForm.controls) {
       this.validateMagasinForm.controls[key].markAsPristine();
@@ -141,7 +142,7 @@ export class MagasinComponent implements OnInit {
   list(): void {
     this.magasinService.getList().subscribe(
       (data: Magasin[]) => {
-        this.magasinList = data;
+        this.magasinList = [...data];
         console.log('MagasinList ==>', this.magasinList);
         this.listOfDisplayData = [...this.magasinList];
         this.pageIndex = 1;

@@ -32,6 +32,7 @@ import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {NzDrawerModule} from 'ng-zorro-antd/drawer';
 import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
 import {NzCardModule} from 'ng-zorro-antd/card';
+import {NzDatePickerModule} from 'ng-zorro-antd/date-picker';
 
 
 @NgModule({
@@ -65,7 +66,7 @@ import {NzCardModule} from 'ng-zorro-antd/card';
     NzDrawerModule,
     NzDescriptionsModule,
     NzCardModule,
-
+    NzDatePickerModule,
   ]
 })
 export class DashboardModule { }

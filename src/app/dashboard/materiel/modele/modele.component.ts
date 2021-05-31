@@ -21,6 +21,11 @@ export class ModeleComponent implements OnInit {
 
   modeleList: Modele[];
 
+  searchValue = '';
+  visible = false;
+  listOfDisplayData;
+  pageIndex;
+
   indexOfTab: number;
 
   listOfColumn: any = [];
@@ -83,12 +88,23 @@ canWrite(): boolean {
   list(): void {
     this.modeleService.getList().subscribe(
       (data: any) => {
-        this.modeleList = data;
+        this.modeleList = [...data];
         console.log('MagasinList ==>', this.modeleList);
+        this.listOfDisplayData = [...this.modeleList];
       },
       (error: HttpErrorResponse) => {
         console.log('error getList Magasin ==>', error.message, ' ', error.status, ' ', error.statusText);
       });
+  }
+
+  reset(): void {
+    this.searchValue = '';
+    this.search();
+  }
+
+  search(): void {
+    this.visible = false;
+    this.listOfDisplayData = this.modeleList.filter((item: Modele) => item.libelle.indexOf(this.searchValue) !== -1);
   }
 
   confirmMsgDelete(data: Modele){
@@ -121,7 +137,7 @@ canWrite(): boolean {
       {
         title: 'Libellé',
         compare: null,
-        priority: false
+        sortFn: (a: Modele, b: Modele) => a.libelle.localeCompare(b.libelle),
       },
       /*{
         title: 'Math Score',
@@ -150,6 +166,7 @@ canWrite(): boolean {
           (data: any) => {
             this.modeleList.unshift(data);
             this.modeleList = [...this.modeleList];
+            this.listOfDisplayData = [...this.modeleList];
             this.makeModeleForm(null);
 
             console.log('Enregistrement ok');
@@ -166,6 +183,7 @@ canWrite(): boolean {
           (data: Modele) => {
             this.modeleList[i] = data;
             this.modeleList = [...this.modeleList];
+            this.listOfDisplayData = [...this.modeleList];
             this.makeModeleForm(null);
 
             console.log('Update ok');
