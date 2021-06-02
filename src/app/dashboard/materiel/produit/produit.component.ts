@@ -21,6 +21,7 @@ import {EtatProduit} from '../../../models/etat-produit';
 import {TokenService} from 'src/app/services/token/token.service';
 import {Token} from 'src/app/models/token.model';
 import {environment} from '../../../../environments/environment';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-produit',
@@ -70,7 +71,7 @@ export class ProduitComponent implements OnInit {
     private etatService: EtatService,
     private magasinProduitService: MagasinProduitService,
     private etatProduitService: EtatProduitService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
     this.token = this.tokenService.getAccessToken();
   }

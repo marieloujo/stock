@@ -9,6 +9,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import { TokenService } from 'src/app/services/token/token.service';
 import { Token } from 'src/app/models/token.model';
 import {environment} from '../../../../environments/environment';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-marque',
@@ -33,7 +34,7 @@ export class MarqueComponent implements OnInit {
     private behaviorService: BehaviorService,
     private fb: FormBuilder,
     private marqueService: MarqueService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) { this.token = this.tokenService.getAccessToken(); }
 
   ngOnInit(): void {
@@ -91,11 +92,11 @@ canWrite(): boolean {
       },
       (error: HttpErrorResponse) => {
         console.log('error getList Magasin ==>', error.message, ' ', error.status, ' ', error.statusText);
-      });
+      },
+      );
   }
 
   confirmMsgDelete(data: Marque){
-
     this.marqueService.deleteMarque(data.id).subscribe(
       (data01: any) => {
         console.log('data du delete ==>', data01);
@@ -105,7 +106,8 @@ canWrite(): boolean {
       },
       (error: HttpErrorResponse) => {
         console.log('error deleteEtat ==>', error.message, ' ', error.status, ' ', error.statusText);
-      }
+      },
+      
     );
   }
 
@@ -159,7 +161,8 @@ canWrite(): boolean {
           (error: HttpErrorResponse) => {
             console.log('Enregistrement non ok');
 
-          });
+          },
+          );
       } else {
         const i = this.marqueList.findIndex(p => p.id == formData.id);
         this.marqueService.updateMarque(formData).subscribe(
@@ -174,7 +177,8 @@ canWrite(): boolean {
           },
           (error: HttpErrorResponse) => {
             console.log('Update non ok');
-          });
+          },
+          );
       }
 
     }

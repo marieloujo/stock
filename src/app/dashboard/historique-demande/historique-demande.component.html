@@ -1,3 +1,6 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#fff" type = "line-scale-pulse-out" [fullScreen] = "true"><p style="color: white" > Chargement... </p></ngx-spinner>
+
+
 <h2>Historique des demandes</h2>
 
 <div nz-row>
@@ -6,36 +9,36 @@
     <a [routerLink]="['/dashboard/nouvelle-demande']"> Faire une nouvelle demande </a>
   </button>
 
-  <div nz-col nzSpan="8">
+    <div nz-col nzSpan="8">
 
-    <label>
-      Date début:
-      <input [(ngModel)]="startDate" type="date" name="bday">
-    </label>
+        <label>
+        Date début:
+        <input [(ngModel)]="startDate" type="date" name="bday">
+        </label>
 
-    <!--<nz-input-group nzCompact>
-      <input type="text" nz-input [ngModel]="'input content'" style="width:50%;" />
-      <nz-date-picker></nz-date-picker>
-    </nz-input-group>-->
+        <!--<nz-input-group nzCompact>
+        <input type="text" nz-input [ngModel]="'input content'" style="width:50%;" />
+        <nz-date-picker></nz-date-picker>
+        </nz-input-group>-->
 
-  </div>
-  <div nz-col nzSpan="8">
+    </div>
+    <div nz-col nzSpan="8">
 
-    <label>
-      Date fin:
-      <input [(ngModel)]="endDate" type="date" name="bday">
-    </label>
+        <label>
+        Date fin:
+        <input [(ngModel)]="endDate" type="date" name="bday">
+        </label>
 
-    <!--<nz-input-group nzCompact>
-      <input type="text" nz-input [ngModel]="'input content'" style="width:50%;" />
-      <nz-date-picker></nz-date-picker>
-    </nz-input-group>-->
+        <!--<nz-input-group nzCompact>
+        <input type="text" nz-input [ngModel]="'input content'" style="width:50%;" />
+        <nz-date-picker></nz-date-picker>
+        </nz-input-group>-->
 
-  </div>
+    </div>
 
-  <div nz-col nzSpan="8">
-    <button (click)="rechercherParDate()" nz-button nzType="default">Rechercher par période</button>
-  </div>
+    <div nz-col nzSpan="8">
+        <button (click)="rechercherParDate()" nz-button nzType="default">Rechercher par période</button>
+    </div>
 
   <nz-table #sortTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzPageSize]="5" style="margin-top: 1.5em">
     <thead>
@@ -248,6 +251,11 @@
     <nz-descriptions [nzColumn]="2" nzTitle="Description">
       <nz-descriptions-item nzTitle=" " [nzSpan]="2">{{descriptionCourante}}.</nz-descriptions-item>
     </nz-descriptions>
+    <nz-divider></nz-divider>
+
+    <nz-descriptions [nzColumn]="2" nzTitle="Pièce Jointe">
+        <nz-descriptions-item nzTitle=" " [nzSpan]="2"> <a href="{{urlCourante}}"  target="_blank" rel="noopener noreferrer">{{urlCourante}}</a></nz-descriptions-item>
+      </nz-descriptions>
     <nz-divider></nz-divider>
 
     <!--<nz-descriptions [nzColumn]="2" nzTitle="Destination">

@@ -29,11 +29,13 @@ import {NzPaginationModule} from 'ng-zorro-antd/pagination';
 import {NzModalModule} from 'ng-zorro-antd/modal';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 
+import { NgxSpinnerModule } from "ngx-spinner";
 
 
 @NgModule({
   declarations: [UtilisateursComponent, ProfilComponent, ServiceComponent, UserRunComponent],
   imports: [
+      NgxSpinnerModule,
     CommonModule,
     UtilisateursRoutingModule,
     NzLayoutModule,

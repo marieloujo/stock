@@ -12,6 +12,7 @@ import {Token} from 'src/app/models/token.model';
 import {environment} from '../../../environments/environment';
 import {PersonneService} from '../../services/dashboard/personne.service';
 import {Personne} from '../../models/personne';
+import { NgxSpinnerService } from "ngx-spinner";
 
 interface Historique {
   numserie: string;
@@ -101,6 +102,7 @@ export class HistoriqueDemandeComponent implements OnInit {
   ];
 
   descriptionCourante: string = '';
+  urlCourante: String = '';
   demandeurCourant: string = '';
   dateDemandeCourant: string = '';
   dateValidationDateCourant: string = '';
@@ -265,8 +267,14 @@ export class HistoriqueDemandeComponent implements OnInit {
     ];
   }
 
+
+  
+
   openDrawer(data: DemandeProduit): void {
+
+    
     this.descriptionCourante = data.description;
+    this.urlCourante = data.demande.url;
     this.dateValidationDateCourant = new Date(data.validationDate).toLocaleDateString();
     this.dateValidationTimeCourant = new Date(data.validationDate).toLocaleTimeString();
     this.dateLivraisonDateCourant = new Date(data.dateLivraison).toLocaleDateString();
@@ -311,6 +319,7 @@ export class HistoriqueDemandeComponent implements OnInit {
           });
       }
     }
+
 
 
     this.demandeProduitService.getDemandeProduitCreatedBy(data.id).subscribe(

@@ -12,9 +12,12 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {NzButtonModule} from 'ng-zorro-antd/button';
 
 
+import { NgxSpinnerModule } from "ngx-spinner";
+
 @NgModule({
   declarations: [ConnexionComponent, LoginComponent, RegisterComponent, ForgotPasswordComponent],
   imports: [
+      NgxSpinnerModule,
     CommonModule,
     ConnexionRoutingModule,
     NzInputModule,

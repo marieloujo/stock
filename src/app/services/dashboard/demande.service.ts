@@ -24,8 +24,16 @@ export class DemandeService {
     return this.http.get(`${this.url}/list`, this.http_get_request());
   }
 
-  createDemande(demande: Demande): Observable<Object> {
-    return this.http.post(`${this.url}/creer-demande`, demande, this.http_get_request());
+
+  createDemande(demande: Demande, file: File): Observable<Object> {
+
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    formData.append('demande', JSON.stringify(demande));
+    
+
+    return this.http.post(`${this.url}/creer-demande`, formData, this.http_multipart_request());
+
   }
 
   updateDemande(demande: Demande): Observable<Object> {
@@ -55,6 +63,21 @@ export class DemandeService {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Access-Control-Allow-Origin':'*',
+            'Authorization': 'Bearer ' + this.getAccessToken().accessToken
+        })
+    };
+
+    return httpOptions;
+}
+
+
+http_multipart_request() {
+
+    this.checkCredentials();
+
+
+    const httpOptions = {
+        headers: new HttpHeaders({
             'Authorization': 'Bearer ' + this.getAccessToken().accessToken
         })
     };

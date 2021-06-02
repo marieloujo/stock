@@ -126,5 +126,8 @@
       }
     }
   },
-  "defaultProject": "stock-bollore-front"
+  "defaultProject": "stock-bollore-front",
+  "cli": {
+    "analytics": "7047b1ac-db48-4ff8-b571-246000f7ef12"
+  }
 }

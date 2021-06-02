@@ -1,3 +1,6 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#fff" type = "line-scale-pulse-out" [fullScreen] = "true"><p style="color: white" > Chargement... </p></ngx-spinner>
+
+
 <nz-tabset [(nzSelectedIndex)]="indexOfTab" [nzSize]="'large'">
 
   <nz-tab [nzTitle]="'Nouvelle demande' ">
@@ -183,18 +186,32 @@
     </div>
     <div nz-row style="margin-top: 10px;">
       <div nz-col nzSpan="24">
-        <nz-space>
-          <nz-space-item>
-            <button nz-button nzType="default" (click)="addNewProduit()"><i nz-icon nzType="check"></i>
-              Rajouter un nouveau produit
-            </button>
-          </nz-space-item>
-          <nz-space-item>
-            <button nz-button nzType="primary" (click)="faireValiderProduit()" [disabled]="demandeProduitList.length == 0 || demandeProduitList == null"><i nz-icon nzType="check"></i>
-              Faire valider
-            </button>
-          </nz-space-item>
-        </nz-space>
+
+        <form nz-form  [formGroup]="faireValiderForm" enctype="multipart/form-data" (ngSubmit)="faireValiderProduit()">
+
+            <div nz-col nzSpan="12" style="padding-right: 1.5em">
+                <nz-form-item>
+                <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
+                    <input nz-input type="file" formControlName="file" (change)="setDocument($event.target.files)" accept="application/pdf" placeholder="" value="{{gamme}}"/>
+                </nz-form-control>
+                </nz-form-item>
+            </div>
+            
+            <nz-space>
+            <nz-space-item>
+                <button nz-button nzType="default" (click)="addNewProduit()"><i nz-icon nzType="check"></i>
+                Rajouter un nouveau produit
+                </button>
+            </nz-space-item>
+            <nz-space-item>
+                <button type="submit" nz-button nzType="submit" [disabled]="demandeProduitList.length == 0 || demandeProduitList == null || faireValiderForm.invalid"><i nz-icon nzType="check"></i>
+                Faire valider
+                </button>
+            </nz-space-item>
+            </nz-space>
+
+        </form>
+
       </div>
     </div>
   </nz-tab>

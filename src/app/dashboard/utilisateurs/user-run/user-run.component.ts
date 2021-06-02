@@ -13,6 +13,7 @@ import {Role} from 'src/app/models/role';
 import {TokenService} from '../../../services/token/token.service';
 import {Token} from '../../../models/token.model';
 import {environment} from '../../../../environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-user-run',
@@ -52,6 +53,7 @@ export class UserRunComponent implements OnInit {
 
   token: Token;
   adminIsConnect: boolean;
+  is_admin: boolean;
 
   constructor(
     private behaviorService: BehaviorService,
@@ -80,6 +82,8 @@ export class UserRunComponent implements OnInit {
     this.listService();
 
     this.adminIsConnect = this.isAdmin();
+
+    this.is_admin = this.isAdmin();
 
   }
 
@@ -149,9 +153,31 @@ export class UserRunComponent implements OnInit {
       serviceB: [personne != null ? personne.serviceB : null,
         [Validators.required]],
       username: [personne != null ? personne.username : null],
-      password: [personne != null ? personne.password : null],
+      password: [''],
+      confirm_password: [''],
+    }, { 
+        validator: this.ConfirmedValidator('password', 'confirm_password')
     });
   }
+
+
+  ConfirmedValidator(controlName: string, matchingControlName: string){
+    return (formGroup: FormGroup) => {
+        const control = formGroup.controls[controlName];
+        const matchingControl = formGroup.controls[matchingControlName];
+        if (matchingControl.errors && !matchingControl.errors.confirmedValidator) {
+            return;
+        }
+        if (control.value !== matchingControl.value) {
+            matchingControl.setErrors({ confirmedValidator: true });
+        } else {
+            matchingControl.setErrors(null);
+        }
+    }
+}
+
+
+
 
   resetPersonneForm(e: MouseEvent): void {
     e.preventDefault();

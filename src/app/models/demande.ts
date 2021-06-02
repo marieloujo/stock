@@ -9,5 +9,6 @@ export class Demande {
   mouvement: string;
   personne: Personne;
   valider: boolean;
+  url: String;
 
 }

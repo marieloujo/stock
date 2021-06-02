@@ -21,6 +21,7 @@ export class DemandeProduitService {
   }
 
   createDemandeProduit(demandeProduit: DemandeProduit): Observable<Object> {
+
     return this.http.post(`${this.url}/creer-demande-produit`, demandeProduit, this.requestService.http_get_request() );
   }
 

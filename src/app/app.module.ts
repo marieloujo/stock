@@ -19,6 +19,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import * as AllIcons from '@ant-design/icons-angular/icons';
 import { ErrorComponent } from './error/error/error.component';
 
+
+
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };

@@ -6,6 +6,7 @@ import {MagasinService} from '../../../services/dashboard/magasin.service';
 import {ServiceBService} from '../../../services/dashboard/service-b.service';
 import {ServiceB} from '../../../models/service-b';
 import {HttpErrorResponse} from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-service',

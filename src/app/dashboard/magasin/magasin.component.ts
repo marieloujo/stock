@@ -8,6 +8,7 @@ import {Produit} from '../../models/produit';
 import { TokenService } from 'src/app/services/token/token.service';
 import { Token } from 'src/app/models/token.model';
 import {environment} from '../../../environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
 //import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
@@ -36,7 +37,7 @@ export class MagasinComponent implements OnInit {
     private behaviorService: BehaviorService,
     private fb: FormBuilder,
     private magasinService: MagasinService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
     //private nzMessageService: NzMessageService
   ) {
       this.token = tokenService.getAccessToken();
@@ -83,6 +84,8 @@ export class MagasinComponent implements OnInit {
   }
 
   submitMagasinForm(): void {
+
+
     for (const i in this.validateMagasinForm.controls) {
       this.validateMagasinForm.controls[i].markAsDirty();
       this.validateMagasinForm.controls[i].updateValueAndValidity();

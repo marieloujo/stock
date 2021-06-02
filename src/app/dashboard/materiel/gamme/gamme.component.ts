@@ -7,6 +7,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {TokenService} from 'src/app/services/token/token.service';
 import {Token} from 'src/app/models/token.model';
 import {environment} from '../../../../environments/environment';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-gamme',
@@ -39,7 +40,7 @@ export class GammeComponent implements OnInit {
     private behaviorService: BehaviorService,
     private fb: FormBuilder,
     private gammeService: GammeService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
     this.token = this.tokenService.getAccessToken();
   }
@@ -102,7 +103,8 @@ export class GammeComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.log('error getList Gamme ==>', error.message, ' ', error.status, ' ', error.statusText);
-      });
+      },
+      );
   }
 
   listOfColumnHeadeer() {
@@ -136,7 +138,8 @@ export class GammeComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.log('error deleteEtat ==>', error.message, ' ', error.status, ' ', error.statusText);
-      }
+      },
+      
     );
   }
 
@@ -188,7 +191,8 @@ export class GammeComponent implements OnInit {
           (error: HttpErrorResponse) => {
             console.log('Enregistrement non ok');
 
-          });
+          },
+          );
       } else {
         const i = this.gammeList.findIndex(p => p.id == formData.id);
         this.gammeService.updateGamme(formData).subscribe(
@@ -204,7 +208,8 @@ export class GammeComponent implements OnInit {
           },
           (error: HttpErrorResponse) => {
             console.log('Update non ok');
-          });
+          },
+          );
       }
 
     } else {

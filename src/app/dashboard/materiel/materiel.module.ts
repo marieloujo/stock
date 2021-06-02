@@ -25,11 +25,13 @@ import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzModalModule} from 'ng-zorro-antd/modal';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {NzPaginationModule} from 'ng-zorro-antd/pagination';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 
 @NgModule({
   declarations: [MaterielComponent, MarqueComponent, ModeleComponent, GammeComponent, EtatComponent, ProduitComponent],
   imports: [
+    NgxSpinnerModule,
     CommonModule,
     MaterielRoutingModule,
     ReactiveFormsModule,

@@ -54,7 +54,6 @@ export class RequestService {
 
     logout() {
         this.Cookie.delete('access_token', '/');
-        this.Cookie.delete('user', '/');
         this.router.navigate(['/login']);
     }
 

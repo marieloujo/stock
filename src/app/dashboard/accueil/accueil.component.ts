@@ -13,6 +13,7 @@ import {Token} from 'src/app/models/token.model';
 import {environment} from '../../../environments/environment';
 import {Gamme} from '../../models/gamme';
 import {GammeService} from '../../services/dashboard/gamme.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 interface StatsPer_dayWeekMonthYear {
   day: number;
@@ -72,7 +73,6 @@ export class AccueilComponent implements OnInit {
   }
 
   getStatsOfDemande() {
-
     this.demandeService.getStatsDayWeekMonthYear().subscribe(
       (data: any) => {
         console.log('Les stats ! => ');
@@ -81,6 +81,9 @@ export class AccueilComponent implements OnInit {
         this.statsCOunt.week = data[1];
         this.statsCOunt.month = data[2];
         this.statsCOunt.year = data[3];
+      }, 
+      (error: any) => {
+
       }
     );
 
@@ -114,7 +117,9 @@ export class AccueilComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         console.log('error demande Produit update ==>', error.message, ' ', error.status, ' ', error.statusText);
-      });
+      },
+      
+      );
 
   }
 

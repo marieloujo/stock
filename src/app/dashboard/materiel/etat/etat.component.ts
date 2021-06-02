@@ -7,6 +7,9 @@ import {HttpErrorResponse} from '@angular/common/http';
 import { TokenService } from 'src/app/services/token/token.service';
 import { Token } from 'src/app/models/token.model';
 import {environment} from '../../../../environments/environment';
+import { NgxSpinnerService } from "ngx-spinner";
+
+
 
 @Component({
   selector: 'app-etat',
@@ -33,7 +36,7 @@ export class EtatComponent implements OnInit {
     private fb: FormBuilder,
     private etatService: EtatService,
     private behaviorService: BehaviorService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
       this.token = this.tokenService.getAccessToken();
   }
@@ -48,6 +51,8 @@ export class EtatComponent implements OnInit {
     this.listOfColumnHeadeer();
 
     this.is_admin = this.canWrite();
+
+    
 
   }
 
@@ -147,7 +152,6 @@ export class EtatComponent implements OnInit {
           },
           (error: HttpErrorResponse) => {
             console.log('Enregistrement non ok');
-
           });
       }
       if (formData.id != null && this.etatExist == false) {

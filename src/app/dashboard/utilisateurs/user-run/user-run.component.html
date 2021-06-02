@@ -1,3 +1,4 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#fff" type = "line-scale-pulse-out" [fullScreen] = "true"><p style="color: white" > Chargement... </p></ngx-spinner>
 
 <nz-tabset [(nzSelectedIndex)]="indexOfTab" [nzSize]="'large'">
   <nz-tab [nzTitle]="'Liste des personnes'" >
@@ -32,7 +33,7 @@
           </nz-filter-trigger>
 
         </th>
-        <th> Actions </th>
+        <th *ngIf="is_admin"> Actions </th>
       </tr>
       </thead>
       <tbody>
@@ -43,7 +44,7 @@
         <td>{{ data?.sexe }}</td>
         <td>{{ data?.roles[0].name }}</td>
         <td>{{ data?.serviceB?.libelle }}</td>
-        <td>
+        <td *ngIf="is_admin">
           <nz-space>
             <nz-space-item>
               <button (click)="updateForm(data)" nz-button nzType="primary" nzShape="circle"><i nz-icon nzType="edit" nzTheme="outline"></i></button>
@@ -200,7 +201,7 @@
           </nz-form-item>
         </div>
 
-        <div nz-col nzSpan="8" style="padding-right: 1.5em">
+        <div nz-col nzSpan="8" style="padding-right: 1.5em" *ngIf="is_admin">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Login</nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
@@ -209,20 +210,20 @@
           </nz-form-item>
         </div>
 
-        <div nz-col nzSpan="8" style="padding-right: 1.5em">
+        <div nz-col nzSpan="8" style="padding-right: 1.5em" *ngIf="is_admin">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Mot de passe </nz-form-label>
             <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input nz-input formControlName="password" placeholder="saisir le mot de passe" type="password"/>
+              <input nz-input formControlName="password"  placeholder="saisir le mot de passe" type="password"/>
             </nz-form-control>
           </nz-form-item>
         </div>
 
-        <div nz-col nzSpan="8" style="padding-right: 1.5em">
+        <div nz-col nzSpan="8" style="padding-right: 1.5em" *ngIf="is_admin">
           <nz-form-item>
             <nz-form-label [nzSpan]="24">Confirmer le Mot de passe </nz-form-label>
-            <nz-form-control [nzSpan]="24" nzErrorTip="Merci de renseigner ce champs!">
-              <input nz-input placeholder="re-saisir le mot de passe" type="password"/>
+            <nz-form-control [nzSpan]="24" nzErrorTip="Le mot de passe et la confirmation ne correspondent pas">
+              <input nz-input formControlName="confirm_password" placeholder="re-saisir le mot de passe" type="password"/>
             </nz-form-control>
           </nz-form-item>
         </div>

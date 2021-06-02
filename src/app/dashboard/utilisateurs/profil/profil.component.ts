@@ -9,6 +9,7 @@ import {Magasin} from '../../../models/magasin';
 import {Role} from '../../../models/role';
 import {RolesEnumService} from '../../../services/common/roles-enum.service';
 import {RolesService} from '../../../services/dashboard/roles.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-profil',

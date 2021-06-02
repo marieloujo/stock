@@ -7,6 +7,8 @@ import { RequestService } from 'src/app/services/request/request.service';
 import { Personne } from 'src/app/models/personne';
 import { TokenService } from 'src/app/services/token/token.service';
 import { Token } from 'src/app/models/token.model';
+import { NgxSpinnerService } from "ngx-spinner";
+
 declare var $: any;
 
 @Component({
@@ -27,7 +29,8 @@ export class LoginComponent implements OnInit {
       private router: Router, 
       private requestService: RequestService, 
       private Cookie: CookieService,
-      private tokenService: TokenService) { 
+      private tokenService: TokenService,
+      private spinner: NgxSpinnerService) { 
 
     this.validateForm = this.formBuilder.group({
         username: ['', Validators.required],
@@ -44,6 +47,7 @@ export class LoginComponent implements OnInit {
 
   submitForm(): void { // formulaire valider
 
+    this.spinner.show();
     this.formSubmitted = true;
     this.erreur_interne = false;
     this.login_echec = false;
@@ -88,8 +92,10 @@ export class LoginComponent implements OnInit {
             error: err => { // erreur
                 this.login_echec = true;
                 this.validateForm.get('password').setValue('');
+                this.spinner.hide();
             },
             complete: () => { // fin de la requete
+                this.spinner.hide();
             }
         });
     } 

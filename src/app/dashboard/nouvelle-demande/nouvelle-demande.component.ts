@@ -20,6 +20,8 @@ import {EtatService} from '../../services/dashboard/etat.service';
 import {Gamme} from '../../models/gamme';
 import {EtatProduit} from '../../models/etat-produit';
 import {EtatProduitService} from '../../services/dashboard/etat-produit.service';
+import { NgxSpinnerService } from "ngx-spinner";
+
 
 @Component({
   selector: 'app-nouvelle-demande',
@@ -29,6 +31,7 @@ import {EtatProduitService} from '../../services/dashboard/etat-produit.service'
 export class NouvelleDemandeComponent implements OnInit {
 
   validateNewDemandeForm!: FormGroup;
+  faireValiderForm: FormGroup;
 
   produitList: Produit[];
   personneList: Personne[];
@@ -55,6 +58,9 @@ export class NouvelleDemandeComponent implements OnInit {
 
   showFieldEtat: boolean = false;
 
+  fileDocument: File;
+  previewFileUrl = '';
+
   //compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.value === o2.value : o1 === o2);
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.id === o2.id : o1 === o2);
 
@@ -70,6 +76,11 @@ export class NouvelleDemandeComponent implements OnInit {
     private etatService: EtatService,
     private etatProduitService: EtatProduitService,
   ) {
+
+    this.faireValiderForm = this.fb.group({
+        file: ['', Validators.required],
+    });
+
   }
 
   ngOnInit(): void {
@@ -124,6 +135,17 @@ export class NouvelleDemandeComponent implements OnInit {
         console.log('error getList Mouvement ==>', error.message, ' ', error.status, ' ', error.statusText);
       });
   }
+
+  setDocument(files: FileList) {
+    this.fileDocument = files.item(0);
+    this.previewFileUrl = URL.createObjectURL(this.fileDocument);
+
+    console.log(files);
+    console.log(this.fileDocument);
+    console.log(this.previewFileUrl);
+
+
+}
 
   /*makeDemandeForm(produit: Produit, demande: Demande){
     this.validateNewDemandeForm = this.fb.group({
@@ -307,7 +329,7 @@ export class NouvelleDemandeComponent implements OnInit {
 
       let newDemande: Demande = new Demande();
 
-      this.demandeService.createDemande(demande).subscribe(
+      this.demandeService.createDemande(demande, this.fileDocument).subscribe(
         (data: any) => {
           console.log('Enregistrement demande => ' + data);
           newDemande = data;
