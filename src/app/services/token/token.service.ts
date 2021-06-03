@@ -25,7 +25,7 @@ export class TokenService {
     }
 
     deleteToken() {
-        this.cookieService.delete('access_token');
+        this.cookieService.delete('access_token', '/');
     }
 
 }

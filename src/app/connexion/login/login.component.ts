@@ -47,13 +47,15 @@ export class LoginComponent implements OnInit {
 
   submitForm(): void { // formulaire valider
 
-    this.spinner.show();
     this.formSubmitted = true;
     this.erreur_interne = false;
     this.login_echec = false;
 
     if (this.validateForm.valid ) {
       let user = new Personne();
+
+
+    this.spinner.show();
 
       user.username = this.validateForm.get('username').value;
       user.password = this.validateForm.get('password').value;
@@ -67,6 +69,8 @@ export class LoginComponent implements OnInit {
         this.requestService.http_simple_request(user, '/api/auth/login').subscribe({
             next: value => { // success
                 this.erreur_interne = false;
+
+                this.spinner.hide();
 
                 let token = new Token();
                 token = value;

@@ -42,7 +42,7 @@
         <td>{{ data?.prenom }}</td>
         <td>{{ data?.email }}</td>
         <td>{{ data?.sexe }}</td>
-        <td>{{ data?.roles[0].name }}</td>
+        <td> <span *ngFor="let role of data?.roles">{{ role.libelle+", " }}</span> </td>
         <td>{{ data?.serviceB?.libelle }}</td>
         <td *ngIf="is_admin">
           <nz-space>
@@ -177,7 +177,7 @@
               &lt;!&ndash;<nz-option   [nzLabel]="rolePersonne.name" [nzValue]="rolePersonne"></nz-option>&ndash;&gt;
             </nz-select>-->
             <nz-select formControlName="roles" [nzSize]="'default'" nzMode="multiple" nzPlaceHolder="Sélectionner un groupe de profil" [nzDisabled]="!adminIsConnect">
-              <nz-option *ngFor="let profil of profilList" [nzLabel]="profil.name" [nzValue]="profil"></nz-option>
+              <nz-option *ngFor="let profil of profilList" [nzLabel]="profil.libelle" [nzValue]="profil"></nz-option>
             </nz-select>
           </nz-form-item>
         </div>

@@ -15,6 +15,7 @@ import {Token} from '../../../models/token.model';
 import {environment} from '../../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+
 @Component({
   selector: 'app-user-run',
   templateUrl: './user-run.component.html',
@@ -23,6 +24,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class UserRunComponent implements OnInit {
 
   validatePersonneForm!: FormGroup;
+
+  environment = environment;
 
   personneList: Personne[];
   profilList: Role[];
@@ -110,6 +113,7 @@ export class UserRunComponent implements OnInit {
             if (profil.name == 'ROLE_PERSONNE') {
               this.rolePersonne = new Role();
               this.rolePersonne = profil;
+              this.rolePersonne.libelle = "PERSONNE";
               this.perso.roles = [];
               this.perso.roles.push(this.rolePersonne);
               this.makePersonneForm(this.perso);
@@ -117,6 +121,28 @@ export class UserRunComponent implements OnInit {
           }
         }
         console.log(this.rolePersonne);
+
+        this.profilList.forEach(element => {
+            switch (element.name) {
+                case environment.ROLE_ADMIN:
+                    element.libelle = "ADMINISTRATEUR"
+                    break;
+                case environment.ROLE_DEMANDEUR:
+                    element.libelle = "DEMANDEUR"
+                    break;
+                case environment.ROLE_GESTIONNAIRE:
+                    element.libelle = "GESTIONNAIRE"
+                    break;
+                case environment.ROLE_PERSONNE:
+                    element.libelle = "PERSONNE"
+                    break;
+                case environment.ROLE_VALIDATEUR:
+                    element.libelle = "VALIDATEUR"
+                    break;
+                default:
+                    break;
+            }
+        });
 
       },
       (error: HttpErrorResponse) => {
@@ -218,6 +244,30 @@ export class UserRunComponent implements OnInit {
       if (formData.id == null) {
         this.personneService.createPersonne(formData).subscribe(
           (data: any) => {
+
+            data.roles.forEach(role => {
+                switch (role.name) {
+                    case environment.ROLE_ADMIN:
+                        role.libelle = "ADMINISTRATEUR"
+                        break;
+                    case environment.ROLE_DEMANDEUR:
+                        role.libelle = "DEMANDEUR"
+                        break;
+                    case environment.ROLE_GESTIONNAIRE:
+                        role.libelle = "GESTIONNAIRE"
+                        break;
+                    case environment.ROLE_PERSONNE:
+                        role.libelle = "PERSONNE"
+                        break;
+                    case environment.ROLE_VALIDATEUR:
+                        role.libelle = "VALIDATEUR"
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+
             this.personneList.unshift(data);
             //this.personneList.push(data)
             this.personneList = [...this.personneList];
@@ -264,8 +314,36 @@ export class UserRunComponent implements OnInit {
     this.personneService.getList().subscribe(
       (data: Personne[]) => {
         this.personneList = data;
+
+
+        this.personneList.forEach(element => {
+            element.roles.forEach(role => {
+                switch (role.name) {
+                    case environment.ROLE_ADMIN:
+                        role.libelle = "ADMINISTRATEUR"
+                        break;
+                    case environment.ROLE_DEMANDEUR:
+                        role.libelle = "DEMANDEUR"
+                        break;
+                    case environment.ROLE_GESTIONNAIRE:
+                        role.libelle = "GESTIONNAIRE"
+                        break;
+                    case environment.ROLE_PERSONNE:
+                        role.libelle = "PERSONNE"
+                        break;
+                    case environment.ROLE_VALIDATEUR:
+                        role.libelle = "VALIDATEUR"
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+
         console.log('Personne List ==>', this.personneList);
         this.listOfDisplayData = [...this.personneList];
+
+
         this.pageIndex = 1;
       },
       (error: HttpErrorResponse) => {
