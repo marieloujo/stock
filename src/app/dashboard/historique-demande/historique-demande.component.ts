@@ -13,6 +13,7 @@ import {environment} from '../../../environments/environment';
 import {PersonneService} from '../../services/dashboard/personne.service';
 import {Personne} from '../../models/personne';
 import { NgxSpinnerService } from "ngx-spinner";
+import { isNull } from '@angular/compiler/src/output/output_ast';
 
 interface Historique {
   numserie: string;
@@ -142,6 +143,10 @@ export class HistoriqueDemandeComponent implements OnInit {
   dateToShow: string = '';
   timeToShow: string = '';
 
+  fileDownload: File;
+  blob: Blob;
+  pdfViewerLink = '';
+
   startDate: Date;
   endDate: Date;
 
@@ -268,6 +273,41 @@ export class HistoriqueDemandeComponent implements OnInit {
   }
 
 
+  downloadFile(filename: string) {
+
+
+    this.demandeService.downloadDocument(filename).subscribe({
+        next: value => {
+            console.log('success')
+            console.log(value);
+           if (value != null) { //
+                this.blob = new Blob([value]);
+                const downloadURL = window.URL.createObjectURL(value);
+                const link = document.createElement('a');
+                link.href = downloadURL;
+                this.pdfViewerLink = downloadURL;
+                link.download = filename; // pour prendre le nom du fichier à télécharger
+                link.click(); // exécuter le download
+            }
+            /*this.loading = false;
+            this.erreur_interne = false;*/
+        },
+        error: err => { // erreur survenue
+            /*if (!isUndefined(err.error.error)) {
+                this.handleError(err.error.error.toString());
+            }
+            this.loading = false;
+            this.erreur_interne = true;*/
+            console.log('erreur')
+            console.log(err)
+        },
+        complete: () => { // fin de la requête
+            //this.loading = false;
+        }
+    });
+
+  }
+  
   
 
   openDrawer(data: DemandeProduit): void {
@@ -345,6 +385,10 @@ export class HistoriqueDemandeComponent implements OnInit {
       });
 
     this.visibleDrawer = true;
+
+
+  
+
   }
 
 

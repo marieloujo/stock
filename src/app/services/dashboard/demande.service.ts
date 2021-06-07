@@ -36,6 +36,12 @@ export class DemandeService {
 
   }
 
+
+  downloadDocument(filename: string): Observable<any> { // télécharger fichier 
+    return this.http.get(`${this.url}/file/download/${filename}` , this.getHttpDownloadHeaderForResource());
+ }
+
+
   updateDemande(demande: Demande): Observable<Object> {
     return this.http.put(`${this.url}/modifier-demande`, demande, this.http_get_request());
   }
@@ -66,6 +72,8 @@ export class DemandeService {
             'Authorization': 'Bearer ' + this.getAccessToken().accessToken
         })
     };
+
+    console.log(httpOptions);
 
     return httpOptions;
 }
@@ -105,5 +113,23 @@ getAccessToken(): Token {
 
     return token;
 }
+
+getHttpDownloadHeaderForResource() { 
+    this.checkCredentials();
+
+    const httpOptions = {
+        headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.getAccessToken().accessToken
+        }),
+        responseType: 'blob' as 'json'
+    };
+
+    console.log(httpOptions);
+
+    return httpOptions;
+}
+
+
 
 }
